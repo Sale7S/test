@@ -1,0 +1,86 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-COCAS-226F1201-7B31-4BBD-833D-E72FE8F601DD</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\**" />
+    <Content Remove="Data\Migrations\**" />
+    <EmbeddedResource Remove="Data\Migrations\**" />
+    <None Remove="Data\Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\passwordchange\password_change_Ar.cshtml" />
+    <Content Remove="Views\passwordchange\password_change_Eng.cshtml" />
+    <Content Remove="Views\passwordreset\password_reset_Ar.cshtml" />
+    <Content Remove="Views\passwordreset\password_reset_Eng.cshtml" />
+    <Content Remove="Views\Users\Login_Student_Ar.cshtml" />
+    <Content Remove="wwwroot\css\passwordchange\password_change_Ar.css" />
+    <Content Remove="wwwroot\css\passwordchange\password_change_Eng.css" />
+    <Content Remove="wwwroot\css\passwordreset\password_reset_Ar.css" />
+    <Content Remove="wwwroot\css\passwordreset\password_reset_Eng.css" />
+    <Content Remove="wwwroot\images\passwordchange\logo.png" />
+    <Content Remove="wwwroot\images\passwordchange\vision2030.png" />
+    <Content Remove="wwwroot\images\passwordreset\logo.png" />
+    <Content Remove="wwwroot\images\passwordreset\vision2030.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.4" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\passwordchange\password_change_Ar.cshtml" />
+    <None Include="Views\passwordchange\password_change_Eng.cshtml" />
+    <None Include="Views\passwordreset\password_reset_Ar.cshtml" />
+    <None Include="Views\passwordreset\password_reset_Eng.cshtml" />
+    <None Include="Views\Users\Login_Student_Ar.cshtml" />
+    <None Include="wwwroot\css\Login\style_Ar.css" />
+    <None Include="wwwroot\css\passwordchange\password_change_Ar.css" />
+    <None Include="wwwroot\css\passwordchange\password_change_Eng.css" />
+    <None Include="wwwroot\css\passwordreset\password_reset_Ar.css" />
+    <None Include="wwwroot\css\passwordreset\password_reset_Eng.css" />
+    <None Include="wwwroot\images\Login\avatar.png" />
+    <None Include="wwwroot\images\Login\logo.png" />
+    <None Include="wwwroot\images\Login\password.png" />
+    <None Include="wwwroot\images\Login\reset.png" />
+    <None Include="wwwroot\images\Login\staff.jpeg" />
+    <None Include="wwwroot\images\Login\student.jpeg" />
+    <None Include="wwwroot\images\Login\username.png" />
+    <None Include="wwwroot\images\Login\vision2030.png" />
+    <None Include="wwwroot\images\passwordchange\logo.png" />
+    <None Include="wwwroot\images\passwordchange\vision2030.png" />
+    <None Include="wwwroot\images\passwordreset\logo.png" />
+    <None Include="wwwroot\images\passwordreset\vision2030.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Department\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Department\Welcome.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Schedule\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Schedule\Welcome.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Section\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Section\Welcome.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
+</Project>

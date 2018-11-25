@@ -1,0 +1,71 @@
+﻿@model COCAS.Models.Section
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Section</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Number" />
+            <div class="form-group">
+                <label asp-for="Activity" class="control-label"></label>
+                <input asp-for="Activity" class="form-control" />
+                <span asp-validation-for="Activity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Duration" class="control-label"></label>
+                <input asp-for="Duration" class="form-control" />
+                <span asp-validation-for="Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Day" class="control-label"></label>
+                <input asp-for="Day" class="form-control" />
+                <span asp-validation-for="Day" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" class="form-control" />
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" class="form-control" />
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinalExam" class="control-label"></label>
+                <input asp-for="FinalExam" class="form-control" />
+                <span asp-validation-for="FinalExam" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Place" class="control-label"></label>
+                <input asp-for="Place" class="form-control" />
+                <span asp-validation-for="Place" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseCode" class="control-label"></label>
+                <select asp-for="CourseCode" class="form-control" asp-items="ViewBag.CourseCode"></select>
+                <span asp-validation-for="CourseCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstructorID" class="control-label"></label>
+                <select asp-for="InstructorID" class="form-control" asp-items="ViewBag.InstructorID"></select>
+                <span asp-validation-for="InstructorID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
