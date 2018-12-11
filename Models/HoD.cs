@@ -6,6 +6,7 @@ namespace COCAS.Models
 {
     public class HoD
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         [Required]

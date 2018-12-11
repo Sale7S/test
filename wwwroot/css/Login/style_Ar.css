@@ -6,8 +6,8 @@ ul li { list-style: none;}
 
 @font-face {
     font-family: 'helvetica-NAL';
-    src: url('~/fonts/HelveticaNeueLTArabicRoman.eot');
-    src: url('~/fonts/HelveticaNeueLTArabicRoman.eot') format('embedded-opentype'),url('~/fonts/HelveticaNeueLTArabicRoman.woff2') format('woff2'),url('~/fonts/HelveticaNeueLTArabicRoman.woff') format('woff'),url('~/fonts/HelveticaNeueLTArabicRoman.ttf') format('truetype'),url('~/fonts/HelveticaNeueLTArabicRoman.svg#HelveticaNeueLTArabicRoman') format('svg');
+    src: url('../fonts/HelveticaNeueLTArabicRoman.eot?ver=2');
+    src: url('../fonts/HelveticaNeueLTArabicRoman.eot?ver=2') format('embedded-opentype'),url('../fonts/HelveticaNeueLTArabicRoman.woff2?ver=2') format('woff2'),url('../fonts/HelveticaNeueLTArabicRoman.woff?ver=2') format('woff'),url('../fonts/HelveticaNeueLTArabicRoman.ttf?ver=2') format('truetype'),url('../fonts/HelveticaNeueLTArabicRoman.svg#HelveticaNeueLTArabicRoman?ver=2') format('svg');
 }
 html, body {
     min-height: 100%!important;
@@ -20,7 +20,11 @@ body {
     font-family: 'helvetica-NAL',Tahoma,Geneva,sans-serif !important;
     line-height: 1.4;
 }
-
+select {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
 form {
     display: block;
     margin-top: 0em;
@@ -83,7 +87,7 @@ form {
 .container {
     width: 100%;
     height: 90%;
-    background-image: url("~/images/Login/student.jpeg");
+    background-image: url("../../images/Login/student.jpeg");
     background-size: cover;
 }
 
@@ -214,18 +218,30 @@ form {
     margin: 15px 0;
 }
 
-.loginButton a {
+.loginButton input {
     font-size: 18px;
     -moz-border-radius: 5px 5px 5px 5px;
     -webkit-border-radius: 5px 5px 5px 5px;
     border-radius: 5px 5px 5px 5px;
-    height: 300px;
+    height: 40px;
     display: inline-block;
     width: 100%;
     color: #fff;
     background-color: #00a1af;
     padding: 5px 0;
     text-align: center;
+}
+
+select.type {
+    text-transform: none;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    width: 40%;
+    text-indent: 20px;
 }
 
 .lostPassword {
@@ -248,4 +264,8 @@ form {
     font-size: 12px;
 }
 
-
+.ERR_MSG {
+    color: red;
+    font-weight: bold;
+    font-size: 12px;
+}

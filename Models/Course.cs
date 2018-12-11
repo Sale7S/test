@@ -7,12 +7,12 @@ namespace COCAS.Models
     public class Course
     {
         [Key]
+        [Required]
         public string Code { get; set; }
 
         [Required]
         public string Title { get; set; }
         
-        [Required]
         [Display(Name = "Department Code")]
         public string DepartmentCode { get; set; }
 

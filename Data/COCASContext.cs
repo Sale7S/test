@@ -15,6 +15,14 @@ namespace COCAS.Models
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<Department>()
+                .HasAlternateKey(d => d.Name);
+        }
+
         public DbSet<COCAS.Models.Course> Course { get; set; }
         public DbSet<COCAS.Models.Department> Department { get; set; }
         public DbSet<COCAS.Models.HoD> HoD { get; set; }
@@ -28,5 +36,6 @@ namespace COCAS.Models
         public DbSet<COCAS.Models.User> User { get; set; }
         public DbSet<COCAS.Models.Request> Request { get; set; }
         public DbSet<COCAS.Models.Response> Response { get; set; }
+        public DbSet<COCAS.Models.Time> Time { get; set; }
     }
 }

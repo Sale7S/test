@@ -7,6 +7,7 @@ namespace COCAS.Models
     public class Section
     {
         [Key]
+        [Required]
         public string Number { get; set; }
         
         //Theoritical or Practical.
@@ -14,10 +15,10 @@ namespace COCAS.Models
         public string Activity { get; set; }
 
         //How many hours? e.g. 3 hours.
-        public int Duration { get; set; }
+        public string Duration { get; set; }
 
         //In which days?
-        public int Day { get; set; }
+        public string Day { get; set; }
         
         [Display(Name = "Start Time")]
         public string StartTime { get; set; }

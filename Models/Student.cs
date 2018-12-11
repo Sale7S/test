@@ -7,6 +7,7 @@ namespace COCAS.Models
     public class Student
     {
         [Key]
+        [Required]
         public string ID { get; set; }
         
         [Required]

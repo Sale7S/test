@@ -7,6 +7,7 @@ namespace COCAS.Models
     public class Form
     {
         [Key]
+        [Required]
         public string Title { get; set; }
 
         [Required]

@@ -1,0 +1,51 @@
+﻿@model List<COCAS.Models.CreateResponseViewModel>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <title>- صفحة طلب @Model.FirstOrDefault(item => true).Request.StudentID</title>
+    <link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="~/css/Login/style_Ar.css?ver=003">
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</head>
+<body dir="rtl">
+    <form id="form" method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <table>
+            <thead>
+                <tr class="text-center" style="border-bottom-style: solid;">
+                    <td style="margin: 50px;">رمز المقرر</td>
+                    <td style="margin: 50px;">الشعبة</td>
+                    <td style="margin: 50px;">مسمى المقرر</td>
+                    <td style="margin: 50px;">عدد الساعات</td>
+                    <td style="margin: 50px; padding-right: 20px;">قبول</td>
+                </tr>
+            </thead>
+            @for (var i = 0; i < Model.Count(); i++)
+            {
+                <tbody>
+                    <tr class="text-center">
+                        <td style="padding-right: 10px; min-width:100px;">
+                            @Model[i].Request.Section.CourseCode
+                        </td>
+                        <td style="min-width:100px;">
+                            @Model[i].Request.SectionNumber
+                        </td>
+                        <td style="min-width:300px;">
+                            @Model[i].Request.Section.Course.Title
+                        </td>
+                        <td style="min-width:100px;">
+                            @Model[i].Request.Section.Duration
+                        </td>
+                        <td style="display: none;"><input asp-for="@Model[i].Request.ID" type="hidden" /></td>
+                        <td style="padding-right: 20px;"><input asp-for="@Model[i].Status" /></td>
+                        <td style="padding-right: 20px;"><input asp-for="@Model[i].Reason" /></td>
+                    </tr>
+                </tbody>
+            }
+
+        </table>
+        <label style="padding-right:300px; padding-top: 20px;"><input class="btn btn-default" type="submit" value="إرسال" /></label>
+    </form>
+</body>

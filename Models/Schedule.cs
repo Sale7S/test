@@ -6,11 +6,12 @@ namespace COCAS.Models
 {
     public class Schedule
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         [Required]
         [Display(Name = "Student ID")]
-        public string CourseCode { get; set; }
+        public string StudentID { get; set; }
 
         [Display(Name = "Section Number")]
         public string SectionNumber { get; set; }

@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using COCAS.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace COCAS.Controllers
 {
-    public class UsersController : Controller
+    public class UsersController : BaseController
     {
         private readonly COCASContext _context;
 
@@ -17,7 +18,7 @@ namespace COCAS.Controllers
         {
             _context = context;
         }
-        
+
         // GET: Users
         public async Task<IActionResult> Index()
         {
@@ -29,9 +30,7 @@ namespace COCAS.Controllers
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var user = await _context.User
                 .Include(u => u.UserType)
@@ -50,7 +49,7 @@ namespace COCAS.Controllers
             ViewData["Type"] = new SelectList(_context.UserType, "Type", "Type");
             return View();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Username,Password,Type")] User user)
@@ -69,9 +68,7 @@ namespace COCAS.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var user = await _context.User.FindAsync(id);
             if (user == null)
@@ -81,21 +78,18 @@ namespace COCAS.Controllers
             ViewData["Type"] = new SelectList(_context.UserType, "Type", "Type", user.Type);
             return View(user);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Username,Password,Type")] User user)
         {
-            if (id != user.Username)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(user);
+                    var userRow = await _context.User.FirstOrDefaultAsync(u => u.Username == id);
+                    _context.Remove(userRow);
+                    _context.Add(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -119,9 +113,7 @@ namespace COCAS.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var user = await _context.User
                 .Include(u => u.UserType)
@@ -150,32 +142,147 @@ namespace COCAS.Controllers
             return _context.User.Any(e => e.Username == id);
         }
 
-        public IActionResult Login_Student_Ar()
+        public IActionResult Login_Ar()
         {
-            ViewData["Type"] = new SelectList(_context.UserType, "Type", "Type");
-            ViewData["E_Type"] = "Wrong type";
+            if (IsLoggedIn())
+            {
+                if (IsStudent())
+                    return RedirectToAction(nameof(Student), new { id = UsernameSession });
+                else if (IsStaff())
+                    return RedirectToAction(nameof(Staff), new { id = UsernameSession });
+                else if (IsHoD())
+                    return RedirectToAction(nameof(HoD), new { id = UsernameSession });
+            }
+
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login_Student_Ar([Bind("Username,Password,Type")] User user)
-        {  
+        public async Task<IActionResult> Login_Ar([Bind("Username,Password")] User user)
+        {
             if (ModelState.IsValid)
             {
-                if (UserExists(user.Username))
+                User db_user = await _context.User
+                        .FirstOrDefaultAsync(m => m.Username == user.Username);
+                if (db_user == null)
+                    ViewData["validate_username"] = "اسم المستخدم غير صحيح";
+                else if (user.Password != db_user.Password)
+                    ViewData["validate_password"] = "كلمة السر غير صحيحة";
+                else
                 {
-                    User db_user = await _context.User.FindAsync(user.Username);
-                    if (user.Password == db_user.Password)
-                        ViewData["E_Password"] = "Wrong password";
-                    if (user.Type == db_user.Type)
-                        ViewData["E_Type"] = "Wrong type";
+                    HttpContext.Session.SetString("Username", db_user.Username);
+                    HttpContext.Session.SetString("UserType", db_user.Type);
+
+                    UsernameSession = HttpContext.Session.GetString("Username");
+                    UserTypeSession = HttpContext.Session.GetString("UserType");
+
+                    if (IsStudent())
+                        return RedirectToAction(nameof(Student), new { id = db_user.Username });
+                    else if (IsStaff())
+                        return RedirectToAction(nameof(Staff), new { id = db_user.Username });
+                    else if (IsHoD())
+                        return RedirectToAction(nameof(HoD), new { id = db_user.Username });
                 }
-                ViewData["E_Username"] = "Wrong username";
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["Type"] = new SelectList(_context.UserType, "Type", "Type", user.Type);
-            return View(user);
+            return View();
+        }
+
+        public async Task<IActionResult> Student(string id)
+        {
+            if (id == null)
+                return NotFound();
+
+            if (!IsStudent())
+                return RedirectToAction(nameof(Login_Ar));
+
+            var schedule = _context.Schedule
+                .Include(sc => sc.Section)
+                    .ThenInclude(se => se.Course)
+                .Include(sc => sc.Section)
+                    .ThenInclude(se => se.Instructor)
+                .Include(sc => sc.Student)
+                    .ThenInclude(s => s.Department)
+                .Where(sc => sc.Student.ID.Equals(id));
+
+            var forms = _context.Form
+                .Where(f => f.Type.Equals("Student"));
+            ViewData["Forms"] = new SelectList(forms, "Title", "Title");
+
+            return View(new StudentViewModel { Schedule = await schedule.ToListAsync() });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Student([Bind("FormTitle")] StudentViewModel studentView, string id)
+        {
+            if (ModelState.IsValid)
+                return RedirectToAction("Fill", "Requests", new { id, formTitle = studentView.FormTitle });
+
+            return View(studentView);
+        }
+
+        public IActionResult Staff(string id)
+        {
+            if (id == null)
+                return NotFound();
+
+            if (!IsStaff())
+                return RedirectToAction(nameof(Login_Ar));
+            
+            var requests = _context.Request
+                .Include(r => r.Student)
+                .Where(r => !_context.Response.Any(res => res.RequestID == r.ID))
+                .GroupBy(
+                r => new { r.CurrentTime, r.StudentID },
+                r => r,
+                (key, value) => new { StudentRequest = key, Requests = value.ToList() });
+
+            var requestsView = new List<RequestViewModel>();
+
+            foreach (var req in requests)
+            {
+                var requestView = new RequestViewModel
+                {
+                    CurrentTime = req.StudentRequest.CurrentTime,
+                    StudentID = req.StudentRequest.StudentID,
+                    Requests = req.Requests
+                };
+                requestsView.Add(requestView);
+            }
+            if (requestsView.Count == 0)
+                ViewData["noRequests"] = "لا يوجد طلبات جديدة.";
+            return View(requestsView);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Staff(string id, DateTime current_time, string student_id) 
+            => RedirectToAction("Fill", "Responses", new { id, current_time, student_id });
+
+        public async Task<IActionResult> HoD(string id)
+        {
+            var requests = await _context.Request
+                .Include(r => r.Student)
+                .ToListAsync();
+            if (id == null)
+                return NotFound();
+            if (!IsHoD())
+                return RedirectToAction(nameof(Login_Ar));
+
+            var forms = _context.Form
+                .Where(f => f.Type.Equals("Student"));
+
+            ViewData["Forms"] = new SelectList(forms, "Title", "Title");
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult HoD(string a, string id)
+        {
+            return View();
         }
     }
 }

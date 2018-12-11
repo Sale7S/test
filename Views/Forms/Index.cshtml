@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.FormType)
             </th>
             <th></th>
@@ -21,6 +24,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FormType.Type)
             </td>

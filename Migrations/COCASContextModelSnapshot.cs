@@ -24,8 +24,7 @@ namespace COCAS.Migrations
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("DepartmentCode")
-                        .IsRequired();
+                    b.Property<string>("DepartmentCode");
 
                     b.Property<string>("Title")
                         .IsRequired();
@@ -42,7 +41,12 @@ namespace COCAS.Migrations
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Name")
+                        .IsRequired();
+
                     b.HasKey("Code");
+
+                    b.HasAlternateKey("Name");
 
                     b.ToTable("Department");
                 });
@@ -97,15 +101,10 @@ namespace COCAS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DepartmentCode")
-                        .IsRequired();
-
                     b.Property<string>("FullName")
                         .IsRequired();
 
                     b.HasKey("ID");
-
-                    b.HasIndex("DepartmentCode");
 
                     b.ToTable("Instructor");
                 });
@@ -116,15 +115,20 @@ namespace COCAS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("CurrentTime");
+
                     b.Property<string>("FormTitle")
                         .IsRequired();
 
-                    b.Property<string>("SectionNumber");
+                    b.Property<string>("SectionNumber")
+                        .IsRequired();
 
                     b.Property<string>("StudentID")
                         .IsRequired();
 
                     b.HasKey("ID");
+
+                    b.HasIndex("CurrentTime");
 
                     b.HasIndex("FormTitle");
 
@@ -137,19 +141,13 @@ namespace COCAS.Migrations
 
             modelBuilder.Entity("COCAS.Models.Response", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("RequestID");
 
                     b.Property<string>("Reason");
 
-                    b.Property<int>("RequestID");
-
                     b.Property<bool>("Status");
 
-                    b.HasKey("ID");
-
-                    b.HasIndex("RequestID");
+                    b.HasKey("RequestID");
 
                     b.ToTable("Response");
                 });
@@ -160,12 +158,10 @@ namespace COCAS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CourseCode")
-                        .IsRequired();
-
                     b.Property<string>("SectionNumber");
 
-                    b.Property<string>("StudentID");
+                    b.Property<string>("StudentID")
+                        .IsRequired();
 
                     b.HasKey("ID");
 
@@ -187,9 +183,9 @@ namespace COCAS.Migrations
                     b.Property<string>("CourseCode")
                         .IsRequired();
 
-                    b.Property<int>("Day");
+                    b.Property<string>("Day");
 
-                    b.Property<int>("Duration");
+                    b.Property<string>("Duration");
 
                     b.Property<string>("EndTime");
 
@@ -228,6 +224,15 @@ namespace COCAS.Migrations
                     b.ToTable("Student");
                 });
 
+            modelBuilder.Entity("COCAS.Models.Time", b =>
+                {
+                    b.Property<DateTime?>("Current");
+
+                    b.HasKey("Current");
+
+                    b.ToTable("Time");
+                });
+
             modelBuilder.Entity("COCAS.Models.User", b =>
                 {
                     b.Property<string>("Username")
@@ -236,8 +241,7 @@ namespace COCAS.Migrations
                     b.Property<string>("Password")
                         .IsRequired();
 
-                    b.Property<string>("Type")
-                        .IsRequired();
+                    b.Property<string>("Type");
 
                     b.HasKey("Username");
 
@@ -425,8 +429,7 @@ namespace COCAS.Migrations
                 {
                     b.HasOne("COCAS.Models.Department", "Department")
                         .WithMany()
-                        .HasForeignKey("DepartmentCode")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("DepartmentCode");
                 });
 
             modelBuilder.Entity("COCAS.Models.Form", b =>
@@ -445,16 +448,12 @@ namespace COCAS.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("COCAS.Models.Instructor", b =>
-                {
-                    b.HasOne("COCAS.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentCode")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("COCAS.Models.Request", b =>
                 {
+                    b.HasOne("COCAS.Models.Time", "Time")
+                        .WithMany()
+                        .HasForeignKey("CurrentTime");
+
                     b.HasOne("COCAS.Models.Form", "Form")
                         .WithMany()
                         .HasForeignKey("FormTitle")
@@ -462,7 +461,8 @@ namespace COCAS.Migrations
 
                     b.HasOne("COCAS.Models.Section", "Section")
                         .WithMany()
-                        .HasForeignKey("SectionNumber");
+                        .HasForeignKey("SectionNumber")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("COCAS.Models.Student", "Student")
                         .WithMany()
@@ -486,7 +486,8 @@ namespace COCAS.Migrations
 
                     b.HasOne("COCAS.Models.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentID");
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("COCAS.Models.Section", b =>
@@ -513,8 +514,7 @@ namespace COCAS.Migrations
                 {
                     b.HasOne("COCAS.Models.UserType", "UserType")
                         .WithMany()
-                        .HasForeignKey("Type")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("Type");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

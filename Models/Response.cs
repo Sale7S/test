@@ -7,16 +7,10 @@ namespace COCAS.Models
     public class Response
     {
         [Key]
-        public int ID {
-            get { return ID; }
-            set { ID = RequestID; }
-
-        }
-        
         public int RequestID { get; set; }
 
         [Required]
-        public Boolean Status { get; set; }
+        public bool Status { get; set; }
         
         public string Reason { get; set; }
 
