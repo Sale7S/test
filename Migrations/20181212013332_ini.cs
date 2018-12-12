@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace COCAS.Migrations
 {
-    public partial class Ini : Migration
+    public partial class ini : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,11 +51,13 @@ namespace COCAS.Migrations
                 name: "Department",
                 columns: table => new
                 {
-                    Code = table.Column<string>(nullable: false)
+                    Code = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Department", x => x.Code);
+                    table.UniqueConstraint("AK_Department_Name", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,6 +69,31 @@ namespace COCAS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FormType", x => x.Type);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Instructor",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    FullName = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Instructor", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Time",
+                columns: table => new
+                {
+                    Current = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Time", x => x.Current);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,7 +219,7 @@ namespace COCAS.Migrations
                 {
                     Code = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: false),
-                    DepartmentCode = table.Column<string>(nullable: false)
+                    DepartmentCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,7 +229,7 @@ namespace COCAS.Migrations
                         column: x => x.DepartmentCode,
                         principalTable: "Department",
                         principalColumn: "Code",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,26 +246,6 @@ namespace COCAS.Migrations
                     table.PrimaryKey("PK_HoD", x => x.ID);
                     table.ForeignKey(
                         name: "FK_HoD_Department_DepartmentCode",
-                        column: x => x.DepartmentCode,
-                        principalTable: "Department",
-                        principalColumn: "Code",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Instructor",
-                columns: table => new
-                {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FullName = table.Column<string>(nullable: false),
-                    DepartmentCode = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Instructor", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Instructor_Department_DepartmentCode",
                         column: x => x.DepartmentCode,
                         principalTable: "Department",
                         principalColumn: "Code",
@@ -288,7 +295,7 @@ namespace COCAS.Migrations
                 {
                     Username = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
-                    Type = table.Column<string>(nullable: false)
+                    Type = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -298,7 +305,7 @@ namespace COCAS.Migrations
                         column: x => x.Type,
                         principalTable: "UserType",
                         principalColumn: "Type",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -307,8 +314,8 @@ namespace COCAS.Migrations
                 {
                     Number = table.Column<string>(nullable: false),
                     Activity = table.Column<string>(nullable: false),
-                    Duration = table.Column<int>(nullable: false),
-                    Day = table.Column<int>(nullable: false),
+                    Duration = table.Column<string>(nullable: true),
+                    Day = table.Column<string>(nullable: true),
                     StartTime = table.Column<string>(nullable: true),
                     EndTime = table.Column<string>(nullable: true),
                     FinalExam = table.Column<string>(nullable: true),
@@ -330,7 +337,7 @@ namespace COCAS.Migrations
                         column: x => x.InstructorID,
                         principalTable: "Instructor",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -341,11 +348,18 @@ namespace COCAS.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FormTitle = table.Column<string>(nullable: false),
                     StudentID = table.Column<string>(nullable: false),
-                    SectionNumber = table.Column<string>(nullable: true)
+                    SectionNumber = table.Column<string>(nullable: false),
+                    CurrentTime = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Request", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Request_Time_CurrentTime",
+                        column: x => x.CurrentTime,
+                        principalTable: "Time",
+                        principalColumn: "Current",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Request_Form_FormTitle",
                         column: x => x.FormTitle,
@@ -357,7 +371,7 @@ namespace COCAS.Migrations
                         column: x => x.SectionNumber,
                         principalTable: "Section",
                         principalColumn: "Number",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Request_Student_StudentID",
                         column: x => x.StudentID,
@@ -372,9 +386,8 @@ namespace COCAS.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CourseCode = table.Column<string>(nullable: false),
-                    SectionNumber = table.Column<string>(nullable: true),
-                    StudentID = table.Column<string>(nullable: true)
+                    StudentID = table.Column<string>(nullable: false),
+                    SectionNumber = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -390,22 +403,20 @@ namespace COCAS.Migrations
                         column: x => x.StudentID,
                         principalTable: "Student",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Response",
                 columns: table => new
                 {
-                    ID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     RequestID = table.Column<int>(nullable: false),
                     Status = table.Column<bool>(nullable: false),
                     Reason = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Response", x => x.ID);
+                    table.PrimaryKey("PK_Response", x => x.RequestID);
                     table.ForeignKey(
                         name: "FK_Response_Request_RequestID",
                         column: x => x.RequestID,
@@ -469,9 +480,9 @@ namespace COCAS.Migrations
                 column: "DepartmentCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Instructor_DepartmentCode",
-                table: "Instructor",
-                column: "DepartmentCode");
+                name: "IX_Request_CurrentTime",
+                table: "Request",
+                column: "CurrentTime");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Request_FormTitle",
@@ -487,11 +498,6 @@ namespace COCAS.Migrations
                 name: "IX_Request_StudentID",
                 table: "Request",
                 column: "StudentID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Response_RequestID",
-                table: "Response",
-                column: "RequestID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedule_SectionNumber",
@@ -564,6 +570,9 @@ namespace COCAS.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserType");
+
+            migrationBuilder.DropTable(
+                name: "Time");
 
             migrationBuilder.DropTable(
                 name: "Form");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using COCAS.Models;
@@ -49,36 +50,29 @@ namespace COCAS.Controllers
             return View(responseVM);
         }
 
-        public async Task<IActionResult> Fill(string id, DateTime current_time, string student_id)
+        public async Task<IActionResult> Fill(string id, int current_time)
         {
-            if (id == null || current_time == null || student_id == null)
+            if (id == null)
                 return NotFound();
 
             if(!IsStaff())
                 return RedirectToAction("Login_Ar", "Users");
-
+            
             var studentsRequestsPerForm = await _context.Request
                 .Include(r => r.Student)
                 .Include(r => r.Section)
                     .ThenInclude(se => se.Course)
-                .GroupBy(
-                r => new { r.CurrentTime, r.StudentID },
-                r => r,
-                (key, value) => new { StudentRequest = key, Requests = value.ToList() })
-                .Where(r => r.StudentRequest.StudentID == student_id)
+                .Where(r => r.CurrentTime == current_time)
                 .ToListAsync();
 
             var responsesVM = new List<CreateResponseViewModel>();
-            foreach (var item in studentsRequestsPerForm)
+            foreach (var request in studentsRequestsPerForm)
             {
-                foreach (var request in item.Requests)
+                var responseVM = new CreateResponseViewModel
                 {
-                    var responseVM = new CreateResponseViewModel
-                    {
-                        Request = request
-                    };
-                    responsesVM.Add(responseVM);
-                }
+                    Request = request
+                };
+                responsesVM.Add(responseVM);
             }
 
             return View(responsesVM);

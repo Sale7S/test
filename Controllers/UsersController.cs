@@ -216,6 +216,9 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Student([Bind("FormTitle")] StudentViewModel studentView, string id)
         {
+            if (!IsStudent())
+                return RedirectToAction("Login_Ar", "Users");
+
             if (ModelState.IsValid)
                 return RedirectToAction("Fill", "Requests", new { id, formTitle = studentView.FormTitle });
 
@@ -234,9 +237,9 @@ namespace COCAS.Controllers
                 .Include(r => r.Student)
                 .Where(r => !_context.Response.Any(res => res.RequestID == r.ID))
                 .GroupBy(
-                r => new { r.CurrentTime, r.StudentID },
+                r => r.CurrentTime,
                 r => r,
-                (key, value) => new { StudentRequest = key, Requests = value.ToList() });
+                (key, value) => new { time = key, Requests = value.ToList() });
 
             var requestsView = new List<RequestViewModel>();
 
@@ -244,8 +247,7 @@ namespace COCAS.Controllers
             {
                 var requestView = new RequestViewModel
                 {
-                    CurrentTime = req.StudentRequest.CurrentTime,
-                    StudentID = req.StudentRequest.StudentID,
+                    CurrentTime = req.time,
                     Requests = req.Requests
                 };
                 requestsView.Add(requestView);
@@ -257,8 +259,13 @@ namespace COCAS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Staff(string id, DateTime current_time, string student_id) 
-            => RedirectToAction("Fill", "Responses", new { id, current_time, student_id });
+        public IActionResult Staff(string id, int current_time)
+        {
+            if (!IsStaff())
+                return RedirectToAction("Login_Ar", "Users");
+
+            return RedirectToAction("Fill", "Responses", new { id, current_time });
+        }
 
         public async Task<IActionResult> HoD(string id)
         {

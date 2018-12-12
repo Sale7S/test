@@ -115,7 +115,7 @@ namespace COCAS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("CurrentTime");
+                    b.Property<int>("CurrentTime");
 
                     b.Property<string>("FormTitle")
                         .IsRequired();
@@ -226,7 +226,9 @@ namespace COCAS.Migrations
 
             modelBuilder.Entity("COCAS.Models.Time", b =>
                 {
-                    b.Property<DateTime?>("Current");
+                    b.Property<int>("Current")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("Current");
 
@@ -452,7 +454,8 @@ namespace COCAS.Migrations
                 {
                     b.HasOne("COCAS.Models.Time", "Time")
                         .WithMany()
-                        .HasForeignKey("CurrentTime");
+                        .HasForeignKey("CurrentTime")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("COCAS.Models.Form", "Form")
                         .WithMany()

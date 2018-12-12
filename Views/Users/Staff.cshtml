@@ -11,7 +11,7 @@
         @ViewData["noRequests"]
         @foreach (var item in Model)
         {
-            <form asp-route-current_time="@item.CurrentTime" asp-route-student_id="@item.StudentID" method="post">
+            <form asp-route-current_time="@item.CurrentTime" method="post">
                 <div class="form-group" style="padding-top: 10px;">
                     <label>@Html.DisplayFor(model => item.Requests[0].Student.FullName)</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input class="btn btn-default" type="submit" value="@item.Requests[0].FormTitle" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

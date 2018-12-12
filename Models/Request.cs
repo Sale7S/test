@@ -18,7 +18,7 @@ namespace COCAS.Models
         [Required]
         public string SectionNumber { get; set; }
 
-        public DateTime? CurrentTime { get; set; }
+        public int CurrentTime { get; set; }
 
 
         [ForeignKey("FormTitle")]

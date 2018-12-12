@@ -7,9 +7,7 @@ namespace COCAS.Models
 {
     public class RequestViewModel
     {
-        public DateTime? CurrentTime { get; set; }
-
-        public string StudentID { get; set; }
+        public int CurrentTime { get; set; }
 
         public List<Request> Requests { get; set; }
     }

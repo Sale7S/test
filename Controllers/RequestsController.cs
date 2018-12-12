@@ -67,7 +67,6 @@ namespace COCAS.Controllers
                     var time = new Time();
                     if (validSections.Count > 0)
                     {
-                        time.Current = DateTime.Now;
                         _context.Time.Add(time);
                         await _context.SaveChangesAsync();
                     }
