@@ -34,12 +34,5 @@ namespace COCAS.Controllers
                 return true;
             return false;
         }
-
-        protected bool IsAuthenticated(string id)
-        {
-            if (id == UsernameSession)
-                return true;
-            return false;
-        }
     }
 }

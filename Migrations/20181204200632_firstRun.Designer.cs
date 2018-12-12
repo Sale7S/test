@@ -4,14 +4,16 @@ using COCAS.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace COCAS.Migrations
 {
     [DbContext(typeof(COCASContext))]
-    partial class COCASContextModelSnapshot : ModelSnapshot
+    [Migration("20181204200632_firstRun")]
+    partial class firstRun
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,20 +117,15 @@ namespace COCAS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CurrentTime");
-
                     b.Property<string>("FormTitle")
                         .IsRequired();
 
-                    b.Property<string>("SectionNumber")
-                        .IsRequired();
+                    b.Property<string>("SectionNumber");
 
                     b.Property<string>("StudentID")
                         .IsRequired();
 
                     b.HasKey("ID");
-
-                    b.HasIndex("CurrentTime");
 
                     b.HasIndex("FormTitle");
 
@@ -141,13 +138,19 @@ namespace COCAS.Migrations
 
             modelBuilder.Entity("COCAS.Models.Response", b =>
                 {
-                    b.Property<int>("RequestID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Reason");
 
+                    b.Property<int>("RequestID");
+
                     b.Property<bool>("Status");
 
-                    b.HasKey("RequestID");
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestID");
 
                     b.ToTable("Response");
                 });
@@ -224,23 +227,10 @@ namespace COCAS.Migrations
                     b.ToTable("Student");
                 });
 
-            modelBuilder.Entity("COCAS.Models.Time", b =>
-                {
-                    b.Property<int>("Current")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("Current");
-
-                    b.ToTable("Time");
-                });
-
             modelBuilder.Entity("COCAS.Models.User", b =>
                 {
                     b.Property<string>("Username")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("IsFirstLogin");
 
                     b.Property<string>("Password")
                         .IsRequired();
@@ -454,11 +444,6 @@ namespace COCAS.Migrations
 
             modelBuilder.Entity("COCAS.Models.Request", b =>
                 {
-                    b.HasOne("COCAS.Models.Time", "Time")
-                        .WithMany()
-                        .HasForeignKey("CurrentTime")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("COCAS.Models.Form", "Form")
                         .WithMany()
                         .HasForeignKey("FormTitle")
@@ -466,8 +451,7 @@ namespace COCAS.Migrations
 
                     b.HasOne("COCAS.Models.Section", "Section")
                         .WithMany()
-                        .HasForeignKey("SectionNumber")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SectionNumber");
 
                     b.HasOne("COCAS.Models.Student", "Student")
                         .WithMany()

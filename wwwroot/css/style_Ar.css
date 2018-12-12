@@ -6,8 +6,8 @@ ul li { list-style: none;}
 
 @font-face {
     font-family: 'helvetica-NAL';
-    src: url('../fonts/HelveticaNeueLTArabicRoman.eot?ver=2');
-    src: url('../fonts/HelveticaNeueLTArabicRoman.eot?ver=2') format('embedded-opentype'),url('../fonts/HelveticaNeueLTArabicRoman.woff2?ver=2') format('woff2'),url('../fonts/HelveticaNeueLTArabicRoman.woff?ver=2') format('woff'),url('../fonts/HelveticaNeueLTArabicRoman.ttf?ver=2') format('truetype'),url('../fonts/HelveticaNeueLTArabicRoman.svg#HelveticaNeueLTArabicRoman?ver=2') format('svg');
+    src: url('fonts/HelveticaNeueLTArabicRoman.eot?ver=2');
+    src: url('fonts/HelveticaNeueLTArabicRoman.eot?ver=2') format('embedded-opentype'),url('fonts/HelveticaNeueLTArabicRoman.woff2?ver=2') format('woff2'),url('fonts/HelveticaNeueLTArabicRoman.woff?ver=2') format('woff'),url('fonts/HelveticaNeueLTArabicRoman.ttf?ver=2') format('truetype'),url('fonts/HelveticaNeueLTArabicRoman.svg#HelveticaNeueLTArabicRoman?ver=2') format('svg');
 }
 html, body {
     min-height: 100%!important;
@@ -35,33 +35,10 @@ form {
 	padding: 0 45px;
 }
 
-.logo {
-    margin-top: 5px;
-	padding-right: 430px;
-}
-
-.logo, .logo a, .logo a img {
-    display: inline-block;
-    height: 81px;
-    width: 274px;
-}
-
-.vision2030 {
-    margin-top: 20px;
-    margin-left: 30px;
-}
-
-.vision2030, .vision2030 img {
-    height: 60px;
-    width: 119px;
-    float: left;
-}
-
 .navbar {
 	background-color: #00a1b0;
-	height: 30px;
+	height: 50px;
     margin: 0 auto;
-    padding-top: 10px;
     width: 100%;
     font-size: 16px !important;
     text-decoration: none;
@@ -69,12 +46,12 @@ form {
 
 .homePage {
     float: right;
-	margin-right: 100px;
+	margin-right: 30px;
     color: white;
 	cursor: pointer;
 }
 
-.EngilshPage{
+.Logout{
 	float: left;
 	margin-left: 100px;
     color: white;
@@ -83,8 +60,8 @@ form {
 
 .container {
     width: 100%;
-    height: 77%;
-    background-image: url("../../images/Login/student.jpeg");
+    height: 87.3%;
+    background-image: url("../images/Login/student.jpeg");
     background-size: cover;
 }
 
@@ -220,7 +197,7 @@ form {
     width: 100%;
     color: #fff;
     background-color: #00a1af;
-    padding: 5px 0;
+    padding-bottom: 11px;
     text-align: center;
 }
 
@@ -236,28 +213,12 @@ select.type {
     text-indent: 20px;
 }
 
-.lostPassword {
-    margin-bottom: 10px;
-    text-align: right;
-}
-
-.lostPassword a {
-    color: #2ca3ba !important;
-}
-
-.lostPassword a:visited {
-    color: #333333;
-    text-decoration: none;
-    font-size: 12px;
-}
-.lostPassword a:link {
-    color: #333333;
-    text-decoration: none;
-    font-size: 12px;
-}
-
 .ERR_MSG {
     color: red;
     font-weight: bold;
     font-size: 12px;
+}
+
+.hidden {
+    display: none;
 }

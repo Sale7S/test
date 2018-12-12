@@ -1,81 +1,46 @@
 ﻿@model COCAS.Models.User
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-    <meta charset="UTF-8" />
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="~/css/style_Ar.css?ver=004">
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-</head>
-<body dir="RTL">
-    <div class="headerContent">
-        <div class="logo">
-            <a href="">
-                <img src="~/images/Login/logo.png" title="الصفحة الرئيسية">
-            </a>
+
+@{
+    ViewData["title"] = "تسجيل الدخول";
+}
+<script>
+    document.querySelector(".Logout").setAttribute("class", "hidden");
+</script>
+<div class="login">
+    <form id="loginForm" method="post">
+        <div dir="ltr" asp-validation-summary="All"></div>
+        <span class="ERR_MSG">@ViewData["validate_username"]</span>
+        <span class="ERR_MSG">@ViewData["validate_password"]</span>
+        <div class="avatar">
+            <img src="~/images/Login/avatar.png" height="66" width="66" border="0">
         </div>
-        <div class="vision2030">
-            <img src="~/images/Login/vision2030.png" title="الصفحة الرئيسية">
+        <div class="loginFeilds">
+            <div class="input">
+                <label asp-for="Username">
+                    <img src="~/images/Login/username.png" height="16" width="22" border="0" style="padding-bottom: 3px;">
+                    <span class="labelTxt">اسم المستخدم</span>
+                </label>
+                <input asp-for="Username" class="non-empty refresh" size="15">
+                <span asp-validation-for="Username"></span>
+            </div>
+            <div class="input">
+                <label asp-for="Password">
+                    <img src="~/images/Login/password.png" height="16" width="22" border="0" style="padding-bottom: 3px;">
+                    <span class="labelTxt">كلمة المرور</span>
+                </label>
+                <input asp-for="Password" class="non-empty refresh" size="15">
+                <span asp-validation-for="Password"></span>
+            </div>
+            <script src="~/js/Login/form.js"></script>
+
+            <div class="loginButton">
+                <input type="submit" value="دخول" style="cursor: pointer">
+            </div>
         </div>
-    </div>
-
-    <nav class="navbar">
-        <a class="homePage" href="">كلية الحاسب</a>
-        <a class="EngilshPage" asp-action="Login_Eng">English</a>
-    </nav>
-
-    <div class="container">
-        <div class="login">
-            <form id="loginForm" method="post">
-                <div dir="ltr" asp-validation-summary="All"></div>
-                <span class="ERR_MSG">@ViewData["validate_username"]</span>
-                <span class="ERR_MSG">@ViewData["validate_password"]</span>
-                <div class="avatar">
-                    <img src="~/images/Login/avatar.png" height="66" width="66" border="0">
-                </div>
-                <div class="loginFeilds">
-                    <div class="input">
-                        <label asp-for="Username" class="username required">
-                            <img src="~/images/Login/username.png" height="16" width="12" border="0">
-                            <span class="labelTxt">اسم المستخدم</span>
-                        </label>
-                        <input asp-for="Username" class="userbg non-empty refresh" size="15">
-                        <span asp-validation-for="Username"></span>
-                    </div>
-                    <div class="input">
-                        <label asp-for="Password" class="username required">
-                            <img src="~/images/Login/password.png" height="16" width="12" border="0">
-                            <span class="labelTxt">كلمة السر</span>
-                        </label>
-                        <input asp-for="Password" class="userbg non-empty refresh" size="15">
-                        <span asp-validation-for="Password"></span>
-                    </div>
-                    <script src="~/js/Login/form.js"></script>
-
-                    <div class="loginButton">
-                        <input type="submit" value="دخول" style="cursor: pointer">
-                    </div>
-                    <div class="lostPassword">
-                        <a asp-action="password_reset_Ar">
-                            <img src="~/images/Login/reset.png" height="20" width="18" border="0">
-                            <span class="lostPasswordTxt"> نسيت كلمة المرور</span>
-                        </a>
-                    </div>
-                </div>
-            </form>
-            <script>
-                window.onload = function () {
-                    document.getElementsByClassName('refresh').value = '';
-                }
-            </script>
-        </div>
-    </div>
-
-    <div class="footer">
-        <div id="copyrights" class="copyrights" data-date="">
-        </div>
-    </div>
-
-</body>
-</html>
+    </form>
+    <script>
+        window.onload = function () {
+            document.getElementsByClassName('refresh').value = '';
+        }
+    </script>
+</div>

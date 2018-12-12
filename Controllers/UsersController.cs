@@ -168,23 +168,80 @@ namespace COCAS.Controllers
                 if (db_user == null)
                     ViewData["validate_username"] = "اسم المستخدم غير صحيح";
                 else if (user.Password != db_user.Password)
-                    ViewData["validate_password"] = "كلمة السر غير صحيحة";
+                    ViewData["validate_password"] = "كلمة المرور غير صحيحة";
                 else
                 {
-                    HttpContext.Session.SetString("Username", db_user.Username);
-                    HttpContext.Session.SetString("UserType", db_user.Type);
+                    if (db_user.IsFirstLogin == true)
+                        return RedirectToAction(nameof(Password_change_Ar));
+                    else
+                    {
+                        HttpContext.Session.SetString("Username", db_user.Username);
+                        HttpContext.Session.SetString("UserType", db_user.Type);
 
-                    UsernameSession = HttpContext.Session.GetString("Username");
-                    UserTypeSession = HttpContext.Session.GetString("UserType");
+                        UsernameSession = HttpContext.Session.GetString("Username");
+                        UserTypeSession = HttpContext.Session.GetString("UserType");
 
-                    if (IsStudent())
-                        return RedirectToAction(nameof(Student), new { id = db_user.Username });
-                    else if (IsStaff())
-                        return RedirectToAction(nameof(Staff), new { id = db_user.Username });
-                    else if (IsHoD())
-                        return RedirectToAction(nameof(HoD), new { id = db_user.Username });
+                        if (IsStudent())
+                            return RedirectToAction(nameof(Student), new { id = db_user.Username });
+                        else if (IsStaff())
+                            return RedirectToAction(nameof(Staff), new { id = db_user.Username });
+                        else if (IsHoD())
+                            return RedirectToAction(nameof(HoD), new { id = db_user.Username });
+                    }
                 }
             }
+            return View();
+        }
+
+        public IActionResult Logout()
+        {
+            if (!IsLoggedIn())
+                return RedirectToAction(nameof(Login_Ar));
+
+            HttpContext.Session.SetString("Username", "");
+            HttpContext.Session.SetString("UserType", "");
+
+            UsernameSession = HttpContext.Session.GetString("Username");
+            UserTypeSession = HttpContext.Session.GetString("UserType");
+
+            return RedirectToAction(nameof(Login_Ar));
+        }
+        
+        public IActionResult Password_change_Ar()
+        {
+            if (IsLoggedIn())
+                return RedirectToAction(nameof(Login_Ar));
+            
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Password_change_Ar([Bind("Username, NewPassword, ConfirmNewPassword")] PasswordChangeViewModel change)
+        {
+            if (change == null)
+                return NotFound();
+
+            if (IsLoggedIn())
+                return RedirectToAction(nameof(Login_Ar));
+
+            var user = await _context.User
+                     .FirstOrDefaultAsync(u => u.Username == change.Username);
+
+            if (user == null)
+                ViewData["msg"] = "اسم مستخدم غير صحيح.";
+            else if (change.NewPassword != change.ConfirmNewPassword)
+                ViewData["msg"] = "كلمتا المرور غير متطابقتين.";
+            else
+            {
+                user.Password = change.NewPassword;
+                ViewData["msg"] = "تم تغيير كلمة المرور بنجاح.";
+                
+                user.IsFirstLogin = false;
+                _context.User.Update(user);
+                await _context.SaveChangesAsync();
+            }
+
             return View();
         }
 

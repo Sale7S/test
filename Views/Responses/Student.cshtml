@@ -1,14 +1,8 @@
 ﻿@model COCAS.Models.ResponseViewModel
-
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8" />
-    <title>- صفحة الطلبات</title>
-    <link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap4.css">
-    <link rel="stylesheet" type="text/css" href="~/css/Login/style_Ar.css?ver=003">
-</head>
-<body dir="rtl">
+@{ 
+    ViewData["title"] = "صفحة الطلبات";
+}
+<div style=" height: 100%; width: 100%; background-color: white;">
     <div class="text-center" style="width: 70%; padding-right: 10px;">
         <table class="table text-center">
             <thead>
@@ -43,15 +37,19 @@
                         <td>@item.Request.Section.Duration&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
                         <td>@item.Request.FormTitle&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
                         <td>
-                            @if (item.Status) {@Html.Raw("مقبول"); }
-                        else { @Html.Raw("مرفوض"); }
-                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                            @if (item.Status)
+                            {@Html.Raw("مقبول");
+                        }
+                        else
+                        { @Html.Raw("مرفوض");
+                    }
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                         </td>
                         <td>@item.Reason&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
                     </tr>
                 }
             </tbody>
         </table>
-        <a asp-controller="Users" asp-action="Student" asp-route-id="@Model.ID">رجوع</a>
     </div>
-</body>
+    <a style="padding-right: 20px;" asp-controller="Users" asp-action="Student" asp-route-id="@Model.ID">رجوع</a>
+</div>

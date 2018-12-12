@@ -1,25 +1,10 @@
 ﻿@model IEnumerable<COCAS.Models.Section>
 
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8" />
-    <title>Sections</title>
-    <link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap4.css">
-    <link rel="stylesheet" type="text/css" href="~/css/Login/style_Ar.css?ver=003">
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-</head>
-<body dir="rtl" class="text-center">
-    <script>
-        window.onload = function () {
-            var table = document.getElementById("table");
-            var body = document.querySelector("body");
-            var bodyHeight = (body.style.height - (body.style.height - screen.height));
-
-            table.style.height = (bodyHeight*.75).toString();
-        }
-    </script>
-    <div class="table-responsive text-center" id="table">
+@{
+    ViewData["title"] = "صفحة الشعب المتاحة";
+}
+<div id="body" style=" height: 100%; width: 100%; background-color: white;">
+    <div class="table-responsive text-center" style="height: 70%;">
         <table class="table table-striped">
             <thead>
                 <tr class="text-center">
@@ -94,5 +79,5 @@
             </tbody>
         </table>
     </div>
-    <a href="javascript:history.back()">رجوع</a>
-</body>
+    <a href="javascript:history.back()" style="padding-right: 100px;">رجوع</a>
+</div>

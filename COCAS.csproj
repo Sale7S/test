@@ -14,15 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Users\passwordchange\password_change_Ar.cshtml" />
-    <Content Remove="Views\Users\passwordchange\password_change_Eng.cshtml" />
-    <Content Remove="Views\Users\passwordreset\password_reset_Ar.cshtml" />
-    <Content Remove="Views\Users\passwordreset\password_reset_Eng.cshtml" />
     <Content Remove="Views\Users\Login_Ar.cshtml" />
     <Content Remove="wwwroot\css\passwordchange\password_change_Ar.css" />
-    <Content Remove="wwwroot\css\passwordchange\password_change_Eng.css" />
     <Content Remove="wwwroot\css\passwordreset\password_reset_Ar.css" />
-    <Content Remove="wwwroot\css\passwordreset\password_reset_Eng.css" />
     <Content Remove="wwwroot\images\passwordchange\logo.png" />
     <Content Remove="wwwroot\images\passwordchange\vision2030.png" />
     <Content Remove="wwwroot\images\passwordreset\logo.png" />
@@ -38,20 +32,13 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
-    <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Users\passwordchange\password_change_Ar.cshtml" />
-    <None Include="Views\Users\passwordchange\password_change_Eng.cshtml" />
-    <None Include="Views\Users\passwordreset\password_reset_Ar.cshtml" />
-    <None Include="Views\Users\passwordreset\password_reset_Eng.cshtml" />
+    <None Include="Views\Users\Password_change_Ar.cshtml" />
     <None Include="Views\Users\Login_Ar.cshtml" />
-    <None Include="wwwroot\css\Login\style_Ar.css" />
     <None Include="wwwroot\css\passwordchange\password_change_Ar.css" />
-    <None Include="wwwroot\css\passwordchange\password_change_Eng.css" />
     <None Include="wwwroot\css\passwordreset\password_reset_Ar.css" />
-    <None Include="wwwroot\css\passwordreset\password_reset_Eng.css" />
     <None Include="wwwroot\images\Login\avatar.png" />
     <None Include="wwwroot\images\Login\logo.png" />
     <None Include="wwwroot\images\Login\password.png" />
@@ -67,9 +54,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Files\UploadedFiles.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Views\Users\Staff.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

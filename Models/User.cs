@@ -13,7 +13,9 @@ namespace COCAS.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        
+
+        public bool IsFirstLogin { get; set; } = true;
+
         public string Type { get; set; }
 
 

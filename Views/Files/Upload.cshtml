@@ -1,20 +1,14 @@
 ﻿@model COCAS.Models.UploadViewModel
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=8; IE=7; IE=EDGE" />
-    <meta charset="UTF-8" />
-    <title>رفع الجداول</title>
-    <link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap4.css">
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-</head>
-<body dir="rtl">
-    <div class="container">
+
+<div style=" height: 100%; width: 100%; background-color: white;">
+    <div class="text-center" style="padding: 20px;">
         <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="All"></div>
             <div class="form-group">
-                <p>ارفع ملفات بامتداد 'csv.' فقط.</p>
-                <input asp-for="Files" name="Files" type="file" accept=".csv" class="form-control-file" multiple required /><br /><br />
+                <p>ارفع ملفات بامتداد 'xlsx.' فقط.</p>
+                <input asp-for="Files" type="file" class="btn btn-default" accept=".xlsx" multiple required /><br /><br />
                 <span asp-validation-for="Files"></span>
-                <input type="submit" value="رفع الملفات" style="cursor: pointer">
+                <input class="btn btn-default" type="submit" value="رفع" style="cursor: pointer; height: 23px; padding-top: 0;">
             </div>
         </form>
         <script>
@@ -22,5 +16,7 @@
                 document.getElementById('Files').value = '';
             }
         </script>
+        @ViewData["Done"]
     </div>
-</body>
+    <a asp-controller="users" asp-action="Login_Ar" style="padding-right: 10%;">رجوع</a>
+</div>

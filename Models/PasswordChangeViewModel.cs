@@ -4,15 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace COCAS.Models
 {
-    public class passwordchangeVM
+    public class PasswordChangeViewModel
     {
         [Key]
-        public string Username { get; set; }
-
         [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
+        public string Username { get; set; }
+        
         [Required]
         [DataType(DataType.Password)]
         public string NewPassword { get; set; }
