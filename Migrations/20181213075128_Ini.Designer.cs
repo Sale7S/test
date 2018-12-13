@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace COCAS.Migrations
 {
     [DbContext(typeof(COCASContext))]
-    [Migration("20181209172024_timedRequests")]
-    partial class timedRequests
+    [Migration("20181213075128_Ini")]
+    partial class Ini
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -117,7 +117,7 @@ namespace COCAS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CurrentTime");
+                    b.Property<int>("CurrentTime");
 
                     b.Property<string>("FormTitle")
                         .IsRequired();
@@ -143,19 +143,13 @@ namespace COCAS.Migrations
 
             modelBuilder.Entity("COCAS.Models.Response", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("RequestID");
 
                     b.Property<string>("Reason");
 
-                    b.Property<int>("RequestID");
-
                     b.Property<bool>("Status");
 
-                    b.HasKey("ID");
-
-                    b.HasIndex("RequestID");
+                    b.HasKey("RequestID");
 
                     b.ToTable("Response");
                 });
@@ -234,7 +228,9 @@ namespace COCAS.Migrations
 
             modelBuilder.Entity("COCAS.Models.Time", b =>
                 {
-                    b.Property<DateTime>("Current");
+                    b.Property<int>("Current")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.HasKey("Current");
 
@@ -245,6 +241,8 @@ namespace COCAS.Migrations
                 {
                     b.Property<string>("Username")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("IsFirstLogin");
 
                     b.Property<string>("Password")
                         .IsRequired();

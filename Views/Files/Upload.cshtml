@@ -3,7 +3,6 @@
 <div style=" height: 100%; width: 100%; background-color: white;">
     <div class="text-center" style="padding: 20px;">
         <form method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="All"></div>
             <div class="form-group">
                 <p>ارفع ملفات بامتداد 'xlsx.' فقط.</p>
                 <input asp-for="Files" type="file" class="btn btn-default" accept=".xlsx" multiple required /><br /><br />

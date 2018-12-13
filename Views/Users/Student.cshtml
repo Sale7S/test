@@ -97,7 +97,6 @@
         </table>
         <a asp-controller="Responses" asp-action="Student" asp-route-id="@Model.Schedule[0].StudentID" style="padding-left: 90%;">الطلبات</a>
         <form method="post">
-            <div asp-validation-summary="All"></div>
             <div class="form-group">
                 <select asp-for="FormTitle" class="form-control" style="width: auto; height: auto;" asp-items="@ViewBag.Forms"></select>
                 <span asp-validation-for="FormTitle"></span>

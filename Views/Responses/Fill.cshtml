@@ -14,7 +14,6 @@
         <span style="padding-left: 40px; padding-bottom: 30px">@Model.FirstOrDefault(item => true).Request.Student.FullName</span>
         @Model.FirstOrDefault(item => true).Request.StudentID
         <form id="form" method="post">
-            <div asp-validation-summary="ModelOnly"></div>
             <table class="text-center" style="margin-top: 15px;">
                 <thead>
                     <tr style="border-bottom-style: solid;">
@@ -42,9 +41,17 @@
                             <td style="min-width:100px;">
                                 @Model[i].Request.Section.Duration
                             </td>
-                            <td style="display: none;"><input asp-for="@Model[i].Request.ID" type="hidden" /></td>
-                            <td style="padding-right: 20px;"><input asp-for="@Model[i].Status" /></td>
-                            <td style="padding-right: 20px;"><input asp-for="@Model[i].Reason" style="border-radius: 3px; height: 30px;" /></td>
+                            <td style="display: none;">
+                                <input asp-for="@Model[i].Request.ID" type="hidden" />
+                            </td>
+                            <td style="padding-right: 20px;">
+                                <input asp-for="@Model[i].Status" />
+                                <span asp-validation-for="@Model[i].Status"></span>
+                            </td>
+                            <td style="padding-right: 20px;">
+                                <input asp-for="@Model[i].Reason" style="border-radius: 3px; height: 30px;" />
+                                <span asp-validation-for="@Model[i].Reason"></span>
+                            </td>
                         </tr>
                     </tbody>
                 }

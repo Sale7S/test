@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace COCAS.Migrations
 {
-    public partial class ini : Migration
+    public partial class Ini : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -295,6 +295,7 @@ namespace COCAS.Migrations
                 {
                     Username = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
+                    IsFirstLogin = table.Column<bool>(nullable: false),
                     Type = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

@@ -172,7 +172,7 @@ namespace COCAS.Controllers
                 else
                 {
                     if (db_user.IsFirstLogin == true)
-                        return RedirectToAction(nameof(Password_change_Ar));
+                        return RedirectToAction(nameof(Password_change_Ar), new { user.Username });
                     else
                     {
                         HttpContext.Session.SetString("Username", db_user.Username);
@@ -207,17 +207,25 @@ namespace COCAS.Controllers
             return RedirectToAction(nameof(Login_Ar));
         }
         
-        public IActionResult Password_change_Ar()
+        public IActionResult Password_change_Ar(string username)
         {
+            if (username == null)
+                return NotFound();
+
             if (IsLoggedIn())
                 return RedirectToAction(nameof(Login_Ar));
-            
-            return View();
+
+            var change = new PasswordChangeViewModel
+            {
+                Username = username
+            };
+
+            return View(change);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Password_change_Ar([Bind("Username, NewPassword, ConfirmNewPassword")] PasswordChangeViewModel change)
+        public async Task<IActionResult> Password_change_Ar([Bind("Username, NewPassword, ConfirmNewPassword")] PasswordChangeViewModel change, string unused)
         {
             if (change == null)
                 return NotFound();
@@ -225,24 +233,26 @@ namespace COCAS.Controllers
             if (IsLoggedIn())
                 return RedirectToAction(nameof(Login_Ar));
 
-            var user = await _context.User
-                     .FirstOrDefaultAsync(u => u.Username == change.Username);
-
-            if (user == null)
-                ViewData["msg"] = "اسم مستخدم غير صحيح.";
-            else if (change.NewPassword != change.ConfirmNewPassword)
-                ViewData["msg"] = "كلمتا المرور غير متطابقتين.";
-            else
+            if (ModelState.IsValid)
             {
-                user.Password = change.NewPassword;
-                ViewData["msg"] = "تم تغيير كلمة المرور بنجاح.";
-                
-                user.IsFirstLogin = false;
-                _context.User.Update(user);
-                await _context.SaveChangesAsync();
-            }
+                var user = await _context.User
+                         .FirstOrDefaultAsync(u => u.Username == change.Username);
 
-            return View();
+                if (user == null)
+                    ViewData["validation"] = "اسم المستخدم غير صحيح.";
+                else if (change.NewPassword != change.ConfirmNewPassword)
+                    ViewData["validation"] = "كلمتا المرور غير متطابقتين.";
+                else
+                {
+                    user.Password = change.NewPassword;
+                    user.IsFirstLogin = false;
+                    _context.User.Update(user);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Login_Ar));
+                }
+            }
+            return View(change);
         }
 
         public async Task<IActionResult> Student(string id)

@@ -144,7 +144,7 @@ namespace COCAS.Controllers
         
         private async Task<Department> CreateStudentDept(IRow line)
         {
-            var deptName = line.GetCell(19).StringCellValue.Trim();
+            var deptName = line.GetCell(9).StringCellValue.Trim();
 
             var dept = await _context.Department
                 .FirstOrDefaultAsync(d => d.Name.Equals("علوم الحاسب"));
@@ -156,12 +156,12 @@ namespace COCAS.Controllers
         {
             var student = new Student()
             {
-                ID = line.GetCell(20).NumericCellValue.ToString(),
-                FullName = line.GetCell(22).StringCellValue.Trim(),
+                ID = line.GetCell(10).NumericCellValue.ToString(),
+                FullName = line.GetCell(12).StringCellValue.Trim(),
                 DepartmentCode = dept.Code
             };
 
-            if (!_context.Student.Any(s => s.ID == line.GetCell(20).NumericCellValue.ToString()))
+            if (!_context.Student.Any(s => s.ID == line.GetCell(10).NumericCellValue.ToString()))
             {
                 _context.Student.Add(student);
                 await _context.SaveChangesAsync();
@@ -187,42 +187,31 @@ namespace COCAS.Controllers
             }
         }
 
-        private async Task<Course> CreateCourse(IRow line)
+        private async Task<string> CreateCourse(IRow line)
         {
-            string[] deptCode = line.GetCell(11).StringCellValue.Split(" ");
+            string[] deptCode = line.GetCell(1).StringCellValue.Split(" ");
 
-            if (!_context.Course.Any(co => co.Code == line.GetCell(11).StringCellValue))
+            if (!_context.Course.Any(co => co.Code == line.GetCell(1).StringCellValue))
             {
                 if (!_context.Department.Any(d => d.Code == deptCode[0]))
                     deptCode[0] = "Other";
                 var course = new Course()
                 {
-                    Code = line.GetCell(11).StringCellValue,
-                    Title = line.GetCell(15).StringCellValue.Trim(),
+                    Code = line.GetCell(1).StringCellValue,
+                    Title = line.GetCell(5).StringCellValue.Trim(),
                     DepartmentCode = deptCode[0]
                 };
                 _context.Course.Add(course);
                 await _context.SaveChangesAsync();
-
-                return course;
             }
 
-            return null;
+            return line.GetCell(1).StringCellValue;
         }
 
-        private async Task<Instructor> CreateInstructor(IRow line)
+        private async Task<int> CreateInstructor(IRow line)
         {
-            string fullName;
-
-            try
-            {
-                fullName = line.GetCell(55).StringCellValue.Trim();
-            }
-            catch (NullReferenceException)
-            {
-                fullName = "";
-            }
-
+            string fullName = line.GetCell(45).StringCellValue.Trim();
+            
             if (!_context.Instructor.Any(i => i.FullName == fullName))
             {
                 var instructor = new Instructor()
@@ -231,55 +220,36 @@ namespace COCAS.Controllers
                 };
                 _context.Instructor.Add(instructor);
                 await _context.SaveChangesAsync();
-
-                return instructor;
             }
-            return null;
+            var inst = await _context.Instructor
+                .FirstOrDefaultAsync(i => i.FullName == fullName);
+
+            return inst.ID;
         }
 
         private async Task<Section> CreateSection(IRow line)
         {
-            var course = await CreateCourse(line);
-            var instructor = await CreateInstructor(line);
-
-            int instID;
-            try
-            {
-                instID = instructor.ID;
-            }
-            catch (NullReferenceException)
-            {
-                instID = 6; // '6' is the id for 'غير محدد'
-            }
-
+            var courseCode = await CreateCourse(line);
+            var instructorID = await CreateInstructor(line);
+            
             DataFormatter formatter = new DataFormatter();
-            String duration = formatter.FormatCellValue(line.GetCell(29));
-            String day = formatter.FormatCellValue(line.GetCell(31));
-            string finalExam;
-
-            try
-            {
-                finalExam = line.GetCell(50).StringCellValue;
-            }
-            catch (NullReferenceException)
-            {
-                finalExam = "غير محدد";
-            }
+            String duration = formatter.FormatCellValue(line.GetCell(19));
+            String day = formatter.FormatCellValue(line.GetCell(21));
 
             var section = new Section()
             {
-                Number = line.GetCell(27).NumericCellValue.ToString(),
-                Activity = line.GetCell(24).StringCellValue.Trim(),
+                Number = line.GetCell(17).NumericCellValue.ToString(),
+                Activity = line.GetCell(14).StringCellValue.Trim(),
                 Duration = duration,
                 Day = day,
-                StartTime = line.GetCell(33).StringCellValue,
-                EndTime = line.GetCell(36).StringCellValue,
-                FinalExam = finalExam,
-                CourseCode = line.GetCell(11).StringCellValue,
-                InstructorID = instID
+                StartTime = line.GetCell(23).StringCellValue,
+                EndTime = line.GetCell(26).StringCellValue,
+                FinalExam = line.GetCell(40).StringCellValue,
+                CourseCode = courseCode,
+                InstructorID = instructorID
             };
 
-            if (!_context.Section.Any(se => se.Number == line.GetCell(27).NumericCellValue.ToString()))
+            if (!_context.Section.Any(se => se.Number == line.GetCell(17).NumericCellValue.ToString()))
             {
                 _context.Section.Add(section);
                 await _context.SaveChangesAsync();
