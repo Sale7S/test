@@ -3,81 +3,79 @@
 @{
     ViewData["title"] = "صفحة الشعب المتاحة";
 }
-<div id="body" style=" height: 100%; width: 100%; background-color: white;">
-    <div class="table-responsive text-center" style="height: 70%;">
-        <table class="table table-striped">
-            <thead>
-                <tr class="text-center">
-                    <th scope="col">
-                        رمز المقرر
-                    </th>
-                    <th scope="col">
-                        اسم المقرر
-                    </th>
-                    <th scope="col">
-                        النشاط
-                    </th>
-                    <th scope="col">
-                        الشعبة
-                    </th>
-                    <th scope="col">
-                        الساعات
-                    </th>
-                    <th scope="col">
-                        اليوم
-                    </th>
-                    <th scope="col">
-                        الوقت
-                    </th>
-                    <th scope="col">
-                        القاعة
-                    </th>
-                    <th scope="col">
-                        تاريخ الاختبار
-                    </th>
-                    <th scope="col">
-                        المحاضر
-                    </th>
+<div class="table-responsive text-center" style="height: 70%;">
+    <table class="table table-striped">
+        <thead>
+            <tr class="text-center">
+                <th scope="col">
+                    رمز المقرر
+                </th>
+                <th scope="col">
+                    اسم المقرر
+                </th>
+                <th scope="col">
+                    النشاط
+                </th>
+                <th scope="col">
+                    الشعبة
+                </th>
+                <th scope="col">
+                    الساعات
+                </th>
+                <th scope="col">
+                    اليوم
+                </th>
+                <th scope="col">
+                    الوقت
+                </th>
+                <th scope="col">
+                    القاعة
+                </th>
+                <th scope="col">
+                    تاريخ الاختبار
+                </th>
+                <th scope="col">
+                    المحاضر
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var section in Model)
+            {
+                <tr id="sectionNum" data-value="@Html.DisplayFor(modelItem => section.Number)">
+                    <td>
+                        @Html.DisplayFor(modelItem => section.Course.Code)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.Course.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.Activity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.Duration)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.Day)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.StartTime) @Html.DisplayFor(modelItem => section.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.Place)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.FinalExam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => section.Instructor.FullName)
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var section in Model)
-                {
-                    <tr id="sectionNum" data-value="@Html.DisplayFor(modelItem => section.Number)">
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Course.Code)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Course.Title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Activity)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Number)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Duration)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Day)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.StartTime) @Html.DisplayFor(modelItem => section.EndTime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Place)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.FinalExam)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => section.Instructor.FullName)
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <a href="javascript:history.back()" style="padding-right: 100px;">رجوع</a>
+            }
+        </tbody>
+    </table>
 </div>
+<a href="javascript:history.back()" style="padding-right: 100px;">رجوع</a>

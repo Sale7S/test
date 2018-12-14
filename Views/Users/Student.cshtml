@@ -3,107 +3,104 @@
 @{
     ViewData["title"] = "صفحة الطالب";
 }
-
-<div style=" height: 100%; width: 100%; background-color: white;">
-    <div class="text-center" style="padding-right: 10px;">
-        <table class="table text-center">
-            <thead>
+<div class="text-center" style="padding-right: 10px;">
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <td>
+                    اسم&nbsp;الطالب: @Html.DisplayFor(sc => Model.Schedule[0].Student.FullName)
+                </td>
+                <td>
+                    الرقم&nbsp;الجامعي: @Html.DisplayFor(sc => Model.Schedule[0].Student.ID)
+                </td>
+                <td>
+                    قسم: @Html.DisplayFor(sc => Model.Schedule[0].Student.Department.Name)
+                </td>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <th style="padding-top: 0px;">
+                    رمز المقرر
+                </th>
+                <th style="padding-top: 0px;">
+                    اسم المقرر
+                </th>
+                <th style="padding-top: 0px;">
+                    النشاط
+                </th>
+                <th style="padding-top: 0px;">
+                    الشعبة
+                </th>
+                <th style="padding-top: 0px;">
+                    الساعات
+                </th>
+                <th style="padding-top: 0px;">
+                    اليوم
+                </th>
+                <th style="padding-top: 0px;">
+                    الوقت
+                </th>
+                <th style="padding-top: 0px;">
+                    القاعة
+                </th>
+                <th style="padding-top: 0px;">
+                    تاريخ الاختبار
+                </th>
+                <th style="padding-top: 0px;">
+                    المحاضر
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Schedule)
+            {
                 <tr>
                     <td>
-                        اسم&nbsp;الطالب: @Html.DisplayFor(sc => Model.Schedule[0].Student.FullName)
+                        @Html.DisplayFor(modelItem => item.Section.Course.Code)
                     </td>
                     <td>
-                        الرقم&nbsp;الجامعي: @Html.DisplayFor(sc => Model.Schedule[0].Student.ID)
+                        @Html.DisplayFor(modelItem => item.Section.Course.Title)
                     </td>
                     <td>
-                        قسم: @Html.DisplayFor(sc => Model.Schedule[0].Student.Department.Name)
+                        @Html.DisplayFor(modelItem => item.Section.Activity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Section.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Section.Duration)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Section.Day)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Section.StartTime) @Html.DisplayFor(modelItem => item.Section.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Section.Place)
+                    </td>
+                    <td style="min-width: 300px;">
+                        @Html.DisplayFor(modelItem => item.Section.FinalExam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Section.Instructor.FullName)
                     </td>
                 </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <table class="table text-center">
-            <thead>
-                <tr>
-                    <th style="padding-top: 0px;">
-                        رمز المقرر
-                    </th>
-                    <th style="padding-top: 0px;">
-                        اسم المقرر
-                    </th>
-                    <th style="padding-top: 0px;">
-                        النشاط
-                    </th>
-                    <th style="padding-top: 0px;">
-                        الشعبة
-                    </th>
-                    <th style="padding-top: 0px;">
-                        الساعات
-                    </th>
-                    <th style="padding-top: 0px;">
-                        اليوم
-                    </th>
-                    <th style="padding-top: 0px;">
-                        الوقت
-                    </th>
-                    <th style="padding-top: 0px;">
-                        القاعة
-                    </th>
-                    <th style="padding-top: 0px;">
-                        تاريخ الاختبار
-                    </th>
-                    <th style="padding-top: 0px;">
-                        المحاضر
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Schedule)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.Course.Code)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.Course.Title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.Activity)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.Number)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.Duration)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.Day)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.StartTime) @Html.DisplayFor(modelItem => item.Section.EndTime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.Place)
-                        </td>
-                        <td style="min-width: 300px;">
-                            @Html.DisplayFor(modelItem => item.Section.FinalExam)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Section.Instructor.FullName)
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <a asp-controller="Responses" asp-action="Student" asp-route-id="@Model.Schedule[0].StudentID" style="padding-left: 90%;">الطلبات</a>
-        <form method="post">
-            <div class="form-group">
-                <select asp-for="FormTitle" class="form-control" style="width: auto; height: auto;" asp-items="@ViewBag.Forms"></select>
-                <span asp-validation-for="FormTitle"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" name="submit" value="اختيار" class="btn btn-default" />
-            </div>
-        </form>
-    </div>
+            }
+        </tbody>
+    </table>
+    <a asp-controller="Responses" asp-action="Student" asp-route-id="@Model.Schedule[0].StudentID" style="padding-left: 90%;">الطلبات</a>
+    <form method="post">
+        <div class="form-group">
+            <select asp-for="FormTitle" class="form-control" style="width: auto; height: auto;" asp-items="@ViewBag.Forms"></select>
+            <span asp-validation-for="FormTitle"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" name="submit" value="اختيار" class="btn btn-default" />
+        </div>
+    </form>
 </div>

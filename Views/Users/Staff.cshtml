@@ -3,21 +3,19 @@
 @{ 
     ViewData["title"] = "صفحة شؤون الطلاب";
 }
-<div style=" height: 100%; width: 100%; background-color: white;">
-    <div class="text-center">
-        @ViewData["noRequests"]
-        @foreach (var item in Model)
-        {
-            <form asp-route-current_time="@item.CurrentTime" method="post">
-                <div class="form-group" style="padding-top: 10px;">
-                    <label>@Html.DisplayFor(model => item.Requests[0].Student.FullName)</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input class="btn btn-default" type="submit" value="@item.Requests[0].FormTitle" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <label>عدد المواد: &nbsp;@Html.DisplayFor(model => item.Requests.Count)</label>
-                </div>
-            </form>
-        }<br /><br /><br /><br />
-        <div class="btn btn-default">
-            <a asp-controller="Files" asp-action="Upload">تحديث البيانات</a><br />
-        </div>
+<div class="text-center">
+    @ViewData["noRequests"]
+    @foreach (var item in Model)
+    {
+        <form asp-route-current_time="@item.CurrentTime" method="post">
+            <div class="form-group" style="padding-top: 10px;">
+                <label>@Html.DisplayFor(model => item.Requests[0].Student.FullName)</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn btn-default" type="submit" value="@item.Requests[0].FormTitle" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label>عدد المواد: &nbsp;@Html.DisplayFor(model => item.Requests.Count)</label>
+            </div>
+        </form>
+    }<br /><br /><br /><br />
+    <div class="btn btn-default">
+        <a asp-controller="Files" asp-action="Upload">تحديث البيانات</a><br />
     </div>
 </div>

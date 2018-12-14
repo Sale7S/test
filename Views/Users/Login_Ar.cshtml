@@ -6,7 +6,7 @@
 <script>
     document.querySelector(".Logout").setAttribute("class", "hidden");
 </script>
-<div class="login">
+<div class="container-login login">
     <form id="loginForm" method="post">
         <div dir="ltr" asp-validation-summary="All"></div>
         <span class="ERR_MSG">@ViewData["validate_username"]</span>

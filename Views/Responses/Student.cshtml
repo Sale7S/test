@@ -1,55 +1,54 @@
 ﻿@model COCAS.Models.ResponseViewModel
+
 @{ 
     ViewData["title"] = "صفحة الطلبات";
 }
-<div style=" height: 100%; width: 100%; background-color: white;">
-    <div class="text-center" style="width: 70%; padding-right: 10px;">
-        <table class="table text-center">
-            <thead>
+<div class="text-center" style="width: 70%; padding-right: 10px;">
+    <table class="table text-center">
+        <thead>
+            <tr>
+                <th>رمز&nbsp;المقرر&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                <th>رقم&nbsp;الشعبة&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                <th>مسمى&nbsp;المقرر&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                <th>عدد&nbsp;الساعات&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                <th>نوع&nbsp;الطلب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                <th>حالة&nbsp;الطلب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                <th>السبب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Requests)
+            {
                 <tr>
-                    <th>رمز&nbsp;المقرر&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
-                    <th>رقم&nbsp;الشعبة&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
-                    <th>مسمى&nbsp;المقرر&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
-                    <th>عدد&nbsp;الساعات&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
-                    <th>نوع&nbsp;الطلب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
-                    <th>حالة&nbsp;الطلب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
-                    <th>السبب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                    <td>@item.Section.CourseCode&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.SectionNumber&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Section.Course.Title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Section.Duration&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.FormTitle&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>قيد الانتظار&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Requests)
-                {
-                    <tr>
-                        <td>@item.Section.CourseCode&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>@item.SectionNumber&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>@item.Section.Course.Title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>@item.Section.Duration&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>@item.FormTitle&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>قيد الانتظار&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                    </tr>
-                }
-                @foreach (var item in Model.Responses)
-                {
-                    <tr>
-                        <td>@item.Request.Section.CourseCode&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>@item.Request.SectionNumber&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>@item.Request.Section.Course.Title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>@item.Request.Section.Duration&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>@item.Request.FormTitle&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                        <td>
-                            @if (item.Status)
-                            {@Html.Raw("مقبول");
-                        }
-                        else
-                        { @Html.Raw("مرفوض");
+            }
+            @foreach (var item in Model.Responses)
+            {
+                <tr>
+                    <td>@item.Request.Section.CourseCode&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.SectionNumber&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.Section.Course.Title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.Section.Duration&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.FormTitle&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>
+                        @if (item.Status)
+                        {@Html.Raw("مقبول");
                     }
-                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        </td>
-                        <td>@item.Reason&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                    </tr>
+                    else
+                    { @Html.Raw("مرفوض");
                 }
-            </tbody>
-        </table>
-    </div>
-    <a style="padding-right: 20px;" asp-controller="Users" asp-action="Student" asp-route-id="@Model.ID">رجوع</a>
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    </td>
+                    <td>@item.Reason&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+<a style="padding-right: 20px;" asp-controller="Users" asp-action="Student" asp-route-id="@Model.ID">رجوع</a>

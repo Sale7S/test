@@ -3,30 +3,28 @@
 @{
     ViewData["title"] = @Model.FormTitle;
 }
-<div style=" height: 100%; width: 100%; background-color: white;">
-    <div class="content text-center">
-        <label class="remove" style="background-color: #28a745; border-radius: 3px; margin: 5px; margin-top: 20px;">@ViewData["Requested"]</label>
-        <form id="form" method="post">
+<div class="content text-center">
+    <label class="remove" style="background-color: #28a745; border-radius: 3px; margin: 5px; margin-top: 20px;">@ViewData["Requested"]</label>
+    <form id="form" method="post">
+        <div class="form-group">
+            <label class="control-label" style="padding-top: 50px; padding-bottom: 50px;" asp-for="Student">
+                <span style="padding-left: 300px;">اسم الطالب: @Model.Student.FullName</span>
+                <span style="padding-left: 300px;">الرقم الجامعي: @Model.Student.ID</span>
+                <span>قسم: @Model.Student.Department.Name</span>
+            </label>
+            <input type="hidden" asp-for="Student" value="@Model.Student.ID" />
+        </div>
+        @for (var i = 0; i < 5; i++)
+        {
             <div class="form-group">
-                <label class="control-label" style="padding-top: 50px; padding-bottom: 50px;" asp-for="Student">
-                    <span style="padding-left: 300px;">اسم الطالب: @Model.Student.FullName</span>
-                    <span style="padding-left: 300px;">الرقم الجامعي: @Model.Student.ID</span>
-                    <span>قسم: @Model.Student.Department.Name</span>
-                </label>
-                <input type="hidden" asp-for="Student" value="@Model.Student.ID" />
+                <input asp-for="SectionsNumbers[i]" />
+                <span asp-validation-for="SectionsNumbers[i]"></span>
             </div>
-            @for (var i = 0; i < 5; i++)
-            {
-                <div class="form-group">
-                    <input asp-for="SectionsNumbers[i]" />
-                    <span asp-validation-for="SectionsNumbers[i]"></span>
-                </div>
-            }
-            <div class="form-group">
-                <input type="submit" name="submit" value="اختيار" class="btn btn-default" />
-            </div>
-        </form>
-        <a class="btn btn-default" href="~/Sections/Index">قائمة الشعب المتاحة</a>
-    </div>
-    <a asp-controller="users" asp-action="Login_Ar" style="padding-right: 10%;">رجوع</a>
+        }
+        <div class="form-group">
+            <input type="submit" name="submit" value="اختيار" class="btn btn-default" />
+        </div>
+    </form>
+    <a class="btn btn-default" href="~/Sections/Index">قائمة الشعب المتاحة</a>
 </div>
+<a asp-controller="users" asp-action="Login_Ar" style="padding-right: 10%;">رجوع</a>

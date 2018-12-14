@@ -1,21 +1,23 @@
 ﻿@model COCAS.Models.UploadViewModel
 
-<div style=" height: 100%; width: 100%; background-color: white;">
-    <div class="text-center" style="padding: 20px;">
-        <form method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <p>ارفع ملفات بامتداد 'xlsx.' فقط.</p>
-                <input asp-for="Files" type="file" class="btn btn-default" accept=".xlsx" multiple required /><br /><br />
-                <span asp-validation-for="Files"></span>
-                <input class="btn btn-default" type="submit" value="رفع" style="cursor: pointer; height: 23px; padding-top: 0;">
-            </div>
-        </form>
-        <script>
-            window.onload = function () {
-                document.getElementById('Files').value = '';
-            }
-        </script>
-        @ViewData["Done"]
-    </div>
-    <a asp-controller="users" asp-action="Login_Ar" style="padding-right: 10%;">رجوع</a>
+@{ 
+    ViewData["title"] = "رفع الملفات";
+}
+
+<div class="text-center" style="padding: 20px;">
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <p>ارفع ملفات بامتداد 'xlsx.' فقط.</p>
+            <input asp-for="Files" type="file" class="btn btn-default" accept=".xlsx" multiple required /><br /><br />
+            <span asp-validation-for="Files"></span>
+            <input class="btn btn-default" type="submit" value="رفع" style="cursor: pointer; height: 23px; padding-top: 0;">
+        </div>
+    </form>
+    <script>
+        window.onload = function () {
+            document.getElementById('Files').value = '';
+        }
+    </script>
+    @ViewData["Done"]
 </div>
+<a asp-controller="users" asp-action="Login_Ar" style="padding-right: 10%;">رجوع</a>

@@ -16,7 +16,6 @@
   <ItemGroup>
     <Content Remove="Views\Users\Login_Ar.cshtml" />
     <Content Remove="wwwroot\css\passwordchange\password_change_Ar.css" />
-    <Content Remove="wwwroot\css\passwordreset\password_reset_Ar.css" />
     <Content Remove="wwwroot\images\passwordchange\logo.png" />
     <Content Remove="wwwroot\images\passwordchange\vision2030.png" />
     <Content Remove="wwwroot\images\passwordreset\logo.png" />
@@ -38,7 +37,6 @@
     <None Include="Views\Users\Password_change_Ar.cshtml" />
     <None Include="Views\Users\Login_Ar.cshtml" />
     <None Include="wwwroot\css\passwordchange\password_change_Ar.css" />
-    <None Include="wwwroot\css\passwordreset\password_reset_Ar.css" />
     <None Include="wwwroot\images\Login\avatar.png" />
     <None Include="wwwroot\images\Login\logo.png" />
     <None Include="wwwroot\images\Login\password.png" />
