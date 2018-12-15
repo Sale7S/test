@@ -7,9 +7,6 @@ namespace COCAS.Models
     public class Response
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
-
         [Required]
         public int RequestID { get; set; }
 
