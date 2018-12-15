@@ -23,7 +23,7 @@ namespace COCAS.Controllers
             if (id == null || formTitle == null)
                 return NotFound();
 
-            if (!IsStudent())
+            if (!IsAuthenticated(id))
                 return RedirectToAction("Login_Ar", "Users");
 
             var student = await _context.Student
@@ -47,7 +47,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Fill([Bind("Student,SectionsNumbers")] CreateRequestViewModel CreateRequest, string id, string formTitle)
         {
-            if (!IsStudent())
+            if (!IsAuthenticated(id))
                 return RedirectToAction("Login_Ar", "Users");
 
             if (ModelState.IsValid)

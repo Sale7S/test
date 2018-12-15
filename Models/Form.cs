@@ -15,6 +15,6 @@ namespace COCAS.Models
 
 
         [ForeignKey("Type")]
-        public FormType FormType { get; set; }
+        public UserType UserType { get; set; }
     }
 }

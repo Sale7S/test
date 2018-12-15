@@ -8,7 +8,9 @@ namespace COCAS.Models
     public class ResponseViewModel
     {
         public string ID { get; set; }
+
         public List<Request> Requests { get; set; }
+
         public List<Response> Responses { get; set; }
 
     }

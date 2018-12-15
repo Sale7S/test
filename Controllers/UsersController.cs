@@ -19,129 +19,6 @@ namespace COCAS.Controllers
             _context = context;
         }
 
-        // GET: Users
-        public async Task<IActionResult> Index()
-        {
-            var cOCASContext = _context.User.Include(u => u.UserType);
-            return View(await cOCASContext.ToListAsync());
-        }
-
-        // GET: Users/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-                return NotFound();
-
-            var user = await _context.User
-                .Include(u => u.UserType)
-                .FirstOrDefaultAsync(m => m.Username == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        // GET: Users/Create
-        public IActionResult Create()
-        {
-            ViewData["Type"] = new SelectList(_context.UserType, "Type", "Type");
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Username,Password,Type")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["Type"] = new SelectList(_context.UserType, "Type", "Type", user.Type);
-            return View(user);
-        }
-
-        // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-                return NotFound();
-
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            ViewData["Type"] = new SelectList(_context.UserType, "Type", "Type", user.Type);
-            return View(user);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Username,Password,Type")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var userRow = await _context.User.FirstOrDefaultAsync(u => u.Username == id);
-                    _context.Remove(userRow);
-                    _context.Add(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Username))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["Type"] = new SelectList(_context.UserType, "Type", "Type", user.Type);
-            return View(user);
-        }
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-                return NotFound();
-
-            var user = await _context.User
-                .Include(u => u.UserType)
-                .FirstOrDefaultAsync(m => m.Username == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
-
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(string id)
-        {
-            return _context.User.Any(e => e.Username == id);
-        }
-
         public IActionResult Login_Ar()
         {
             if (IsLoggedIn())
@@ -181,12 +58,7 @@ namespace COCAS.Controllers
                         UsernameSession = HttpContext.Session.GetString("Username");
                         UserTypeSession = HttpContext.Session.GetString("UserType");
 
-                        if (IsStudent())
-                            return RedirectToAction(nameof(Student), new { id = db_user.Username });
-                        else if (IsStaff())
-                            return RedirectToAction(nameof(Staff), new { id = db_user.Username });
-                        else if (IsHoD())
-                            return RedirectToAction(nameof(HoD), new { id = db_user.Username });
+                        return RedirectToAction(nameof(Login_Ar), new { id = UsernameSession });
                     }
                 }
             }
@@ -260,7 +132,7 @@ namespace COCAS.Controllers
             if (id == null)
                 return NotFound();
 
-            if (!IsStudent())
+            if (!IsAuthenticated(id))
                 return RedirectToAction(nameof(Login_Ar));
 
             var schedule = _context.Schedule
@@ -283,8 +155,8 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Student([Bind("FormTitle")] StudentViewModel studentView, string id)
         {
-            if (!IsStudent())
-                return RedirectToAction("Login_Ar", "Users");
+            if (!IsAuthenticated(id))
+                return RedirectToAction(nameof(Login_Ar));
 
             if (ModelState.IsValid)
                 return RedirectToAction("Fill", "Requests", new { id, formTitle = studentView.FormTitle });
@@ -297,7 +169,7 @@ namespace COCAS.Controllers
             if (id == null)
                 return NotFound();
 
-            if (!IsStaff())
+            if (!IsAuthenticated(id))
                 return RedirectToAction(nameof(Login_Ar));
             
             var requests = _context.Request
@@ -328,26 +200,19 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Staff(string id, int current_time)
         {
-            if (!IsStaff())
-                return RedirectToAction("Login_Ar", "Users");
+            if (!IsAuthenticated(id))
+                return RedirectToAction(nameof(Login_Ar));
 
             return RedirectToAction("Fill", "Responses", new { id, current_time });
         }
 
         public async Task<IActionResult> HoD(string id)
         {
-            var requests = await _context.Request
-                .Include(r => r.Student)
-                .ToListAsync();
-            if (id == null)
-                return NotFound();
-            if (!IsHoD())
+            if (!IsAuthenticated(id))
                 return RedirectToAction(nameof(Login_Ar));
 
-            var forms = _context.Form
-                .Where(f => f.Type.Equals("Student"));
-
-            ViewData["Forms"] = new SelectList(forms, "Title", "Title");
+            //var responses = _context.Response
+                //.Where(res => res.Type == "HoD");
 
             return View();
         }
@@ -356,6 +221,12 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult HoD(string a, string id)
         {
+            if (id == null)
+                return NotFound();
+
+            if (!IsAuthenticated(id))
+                return RedirectToAction(nameof(Login_Ar));
+
             return View();
         }
     }

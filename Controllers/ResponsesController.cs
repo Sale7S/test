@@ -18,12 +18,13 @@ namespace COCAS.Controllers
             _context = context;
         }
 
+        //This method list all students' requests and responses.
         public async Task<IActionResult> Student(string id)
         {
             if (id == null)
                 return NotFound();
 
-            if (!IsStudent())
+            if (!IsAuthenticated(id))
                 return RedirectToAction("Login_Ar", "Users");
 
             var studentRequests = await _context.Request
@@ -50,12 +51,13 @@ namespace COCAS.Controllers
             return View(responseVM);
         }
 
+        // This method shows the Staff the request he asked to response to.
         public async Task<IActionResult> Fill(string id, int current_time)
         {
             if (id == null)
                 return NotFound();
 
-            if(!IsStaff())
+            if(!IsAuthenticated(id))
                 return RedirectToAction("Login_Ar", "Users");
             
             var studentsRequestsPerForm = await _context.Request
@@ -82,7 +84,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Fill([Bind("[i].Request.ID, [i].Status, [i].Reason")] List<CreateResponseViewModel> responsesVM, string id)
         {
-            if (!IsStaff())
+            if (!IsAuthenticated(id))
                 return RedirectToAction("Login_Ar", "Users");
             
             foreach (var responseVM in responsesVM)

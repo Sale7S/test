@@ -30,7 +30,14 @@ namespace COCAS.Controllers
 
         protected bool IsHoD()
         {
-            if (UserTypeSession.Equals("HoD"))
+            if (UserTypeSession == "HoD")
+                return true;
+            return false;
+        }
+
+        protected bool IsAuthenticated(string id)
+        {
+            if (UsernameSession == id)
                 return true;
             return false;
         }

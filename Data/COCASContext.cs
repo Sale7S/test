@@ -16,12 +16,12 @@ namespace COCAS.Models
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        /*protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.Entity<Department>()
                 .HasAlternateKey(d => d.Name);
-        }
+        }*/
 
         public DbSet<COCAS.Models.Course> Course { get; set; }
         public DbSet<COCAS.Models.Department> Department { get; set; }
@@ -31,7 +31,6 @@ namespace COCAS.Models
         public DbSet<COCAS.Models.Section> Section { get; set; }
         public DbSet<COCAS.Models.Student> Student { get; set; }
         public DbSet<COCAS.Models.UserType> UserType { get; set; }
-        public DbSet<COCAS.Models.FormType> FormType { get; set; }
         public DbSet<COCAS.Models.Form> Form { get; set; }
         public DbSet<COCAS.Models.User> User { get; set; }
         public DbSet<COCAS.Models.Request> Request { get; set; }

@@ -39,7 +39,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(List<IFormFile> files)
         {
-            if (!IsLoggedIn())
+            if (!IsStaff())
                 return RedirectToAction("Login_Ar", "Users");
 
             if (ModelState.IsValid)
