@@ -1,24 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace COCAS.Models
 {
-    public class Response
+    public class Redirect
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
-
         [Required]
         public int RequestID { get; set; }
 
+        public string Type { get; set; }
+
         [Required]
         public bool Status { get; set; }
-        
-        public string Reason { get; set; }
 
-        public string Type { get; set; }
+        public string Reason { get; set; }
 
 
         [ForeignKey("RequestID")]

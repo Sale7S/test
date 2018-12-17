@@ -46,8 +46,6 @@ namespace COCAS.Migrations
 
                     b.HasKey("Code");
 
-                    b.HasAlternateKey("Name");
-
                     b.ToTable("Department");
                 });
 
@@ -64,16 +62,6 @@ namespace COCAS.Migrations
                     b.HasIndex("Type");
 
                     b.ToTable("Form");
-                });
-
-            modelBuilder.Entity("COCAS.Models.FormType", b =>
-                {
-                    b.Property<string>("Type")
-                        .ValueGeneratedOnAdd();
-
-                    b.HasKey("Type");
-
-                    b.ToTable("FormType");
                 });
 
             modelBuilder.Entity("COCAS.Models.HoD", b =>
@@ -109,6 +97,23 @@ namespace COCAS.Migrations
                     b.ToTable("Instructor");
                 });
 
+            modelBuilder.Entity("COCAS.Models.Redirect", b =>
+                {
+                    b.Property<int>("RequestID");
+
+                    b.Property<string>("Reason");
+
+                    b.Property<bool>("Status");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("RequestID");
+
+                    b.HasIndex("Type");
+
+                    b.ToTable("Redirect");
+                });
+
             modelBuilder.Entity("COCAS.Models.Request", b =>
                 {
                     b.Property<int>("ID")
@@ -141,13 +146,23 @@ namespace COCAS.Migrations
 
             modelBuilder.Entity("COCAS.Models.Response", b =>
                 {
-                    b.Property<int>("RequestID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Reason");
 
+                    b.Property<int>("RequestID");
+
                     b.Property<bool>("Status");
 
-                    b.HasKey("RequestID");
+                    b.Property<string>("Type");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestID");
+
+                    b.HasIndex("Type");
 
                     b.ToTable("Response");
                 });
@@ -258,6 +273,8 @@ namespace COCAS.Migrations
                 {
                     b.Property<string>("Type")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("TypeAr");
 
                     b.HasKey("Type");
 
@@ -438,7 +455,7 @@ namespace COCAS.Migrations
 
             modelBuilder.Entity("COCAS.Models.Form", b =>
                 {
-                    b.HasOne("COCAS.Models.FormType", "FormType")
+                    b.HasOne("COCAS.Models.UserType", "UserType")
                         .WithMany()
                         .HasForeignKey("Type")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -450,6 +467,18 @@ namespace COCAS.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentCode")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("COCAS.Models.Redirect", b =>
+                {
+                    b.HasOne("COCAS.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("COCAS.Models.UserType", "UserType")
+                        .WithMany()
+                        .HasForeignKey("Type");
                 });
 
             modelBuilder.Entity("COCAS.Models.Request", b =>
@@ -481,6 +510,10 @@ namespace COCAS.Migrations
                         .WithMany()
                         .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("COCAS.Models.UserType", "UserType")
+                        .WithMany()
+                        .HasForeignKey("Type");
                 });
 
             modelBuilder.Entity("COCAS.Models.Schedule", b =>

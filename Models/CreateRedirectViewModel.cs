@@ -5,16 +5,12 @@ using System.Threading.Tasks;
 
 namespace COCAS.Models
 {
-    public class CreateResponseViewModel
+    public class CreateRedirectViewModel
     {
         public Request Request { get; set; }
-        
+
         public bool Status { get; set; }
 
         public string Reason { get; set; }
-
-        public bool IsRedirected { get; set; }
-
-        public string UserType { get; set; }
     }
 }

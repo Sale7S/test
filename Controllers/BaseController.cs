@@ -35,6 +35,13 @@ namespace COCAS.Controllers
             return false;
         }
 
+        protected bool IsDean()
+        {
+            if (UserTypeSession == "Dean")
+                return true;
+            return false;
+        }
+
         protected bool IsAuthenticated(string id)
         {
             if (UsernameSession == id)

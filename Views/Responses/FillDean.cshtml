@@ -1,4 +1,4 @@
-﻿@model List<COCAS.Models.CreateResponseViewModel>
+﻿@model List<COCAS.Models.CreateRedirectViewModel>
 
 @{
     ViewData["title"] = $"صفحة طلب {@Model.FirstOrDefault(item => true).Request.StudentID}";
@@ -16,7 +16,6 @@
                     <td>عدد الساعات</td>
                     <td style="margin: 50px; padding-right: 20px;">قبول</td>
                     <td>السبب (اختياري)</td>
-                    <td>إعادة توجيه ل</td>
                 </tr>
             </thead>
             @{ var i = 0; }
@@ -47,29 +46,10 @@
                             <input asp-for="@Model[i].Reason" style="border-radius: 3px; height: 30px;" />
                             <span asp-validation-for="@Model[i].Reason"></span>
                         </td>
-                        <td style="padding-right: 20px;">
-                            <input asp-for="@Model[i].IsRedirected" style="border-radius: 3px; height: 30px;" onclick="show(this, this.parentNode)" />
-                            <span asp-validation-for="@Model[i].IsRedirected"></span>
-                            <select asp-for="@Model[i].UserType" asp-items="@ViewBag.UserType" style="height: auto; width: auto;" class="hidden"></select>
-                        </td>
                     </tr>
                 </tbody>
             }
         </table>
-        <script>
-            function show(element, parent) {
-                var id = $(element).attr("id");
-                var IsChecked = document.getElementById(id).checked;
-                var select = parent.children[2];
-                console.log(select);
-                if (IsChecked)
-                    $(select).attr("class", "show");
-                else
-                    $(select).attr("class", "hidden");
-
-                $(select).load(document.URL + select);
-            }
-        </script>
         <input class="btn btn-default" type="submit" value="إرسال" style="margin-top: 15px;" />
     </form>
 </div>

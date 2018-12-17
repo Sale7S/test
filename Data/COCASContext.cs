@@ -36,5 +36,6 @@ namespace COCAS.Models
         public DbSet<COCAS.Models.Request> Request { get; set; }
         public DbSet<COCAS.Models.Response> Response { get; set; }
         public DbSet<COCAS.Models.Time> Time { get; set; }
+        public DbSet<COCAS.Models.Redirect> Redirect { get; set; }
     }
 }

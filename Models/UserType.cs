@@ -11,5 +11,7 @@ namespace COCAS.Models
         [Required]
         [Display(Name ="Type")]
         public string Type { get; set; }
+        
+        public string TypeAr { get; set; }
     }
 }

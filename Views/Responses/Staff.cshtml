@@ -1,6 +1,6 @@
-﻿@model COCAS.Models.ResponseViewModel
+﻿@model COCAS.Models.StaffRedirectedViewModel
 
-@{ 
+@{
     ViewData["title"] = "صفحة الطلبات";
 }
 <div class="text-center" style="width: 70%; padding-right: 10px;">
@@ -13,19 +13,21 @@
                 <th>عدد&nbsp;الساعات&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
                 <th>نوع&nbsp;الطلب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
                 <th>حالة&nbsp;الطلب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
+                <th>المستقبل&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
                 <th>السبب&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Requests)
+            @foreach (var item in Model.Redirects)
             {
                 <tr>
-                    <td>@item.Section.CourseCode&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                    <td>@item.SectionNumber&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                    <td>@item.Section.Course.Title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                    <td>@item.Section.Duration&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                    <td>@item.FormTitle&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.Section.CourseCode&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.SectionNumber&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.Section.Course.Title&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.Section.Duration&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.Request.FormTitle&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
                     <td>قيد الانتظار&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.UserType.TypeAr&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
                 </tr>
             }
             @foreach (var item in Model.Responses)
@@ -38,15 +40,15 @@
                     <td>@item.Request.FormTitle&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
                     <td>
                         @if (item.Status)
-                        { @Html.Raw("مقبول"); }
+                            {@Html.Raw("مقبول"); }
                         else
-                        { @Html.Raw("مرفوض"); }
+                            { @Html.Raw("مرفوض"); }
                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     </td>
-                    <td>@item.Reason&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
+                    <td>@item.UserType.TypeAr&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-<a style="padding-right: 20px;" asp-controller="Users" asp-action="Student" asp-route-id="@Model.ID">رجوع</a>
+<a style="padding-right: 20px;" asp-controller="Users" asp-action="Login_Ar">رجوع</a>

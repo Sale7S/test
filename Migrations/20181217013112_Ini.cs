@@ -57,18 +57,6 @@ namespace COCAS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Department", x => x.Code);
-                    table.UniqueConstraint("AK_Department_Name", x => x.Name);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FormType",
-                columns: table => new
-                {
-                    Type = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FormType", x => x.Type);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,7 +88,8 @@ namespace COCAS.Migrations
                 name: "UserType",
                 columns: table => new
                 {
-                    Type = table.Column<string>(nullable: false)
+                    Type = table.Column<string>(nullable: false),
+                    TypeAr = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -282,9 +271,9 @@ namespace COCAS.Migrations
                 {
                     table.PrimaryKey("PK_Form", x => x.Title);
                     table.ForeignKey(
-                        name: "FK_Form_FormType_Type",
+                        name: "FK_Form_UserType_Type",
                         column: x => x.Type,
-                        principalTable: "FormType",
+                        principalTable: "UserType",
                         principalColumn: "Type",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -408,22 +397,57 @@ namespace COCAS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Response",
+                name: "Redirect",
                 columns: table => new
                 {
                     RequestID = table.Column<int>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
                     Status = table.Column<bool>(nullable: false),
                     Reason = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Response", x => x.RequestID);
+                    table.PrimaryKey("PK_Redirect", x => x.RequestID);
+                    table.ForeignKey(
+                        name: "FK_Redirect_Request_RequestID",
+                        column: x => x.RequestID,
+                        principalTable: "Request",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Redirect_UserType_Type",
+                        column: x => x.Type,
+                        principalTable: "UserType",
+                        principalColumn: "Type",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Response",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RequestID = table.Column<int>(nullable: false),
+                    Status = table.Column<bool>(nullable: false),
+                    Reason = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Response", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Response_Request_RequestID",
                         column: x => x.RequestID,
                         principalTable: "Request",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Response_UserType_Type",
+                        column: x => x.Type,
+                        principalTable: "UserType",
+                        principalColumn: "Type",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -481,6 +505,11 @@ namespace COCAS.Migrations
                 column: "DepartmentCode");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Redirect_Type",
+                table: "Redirect",
+                column: "Type");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Request_CurrentTime",
                 table: "Request",
                 column: "CurrentTime");
@@ -499,6 +528,16 @@ namespace COCAS.Migrations
                 name: "IX_Request_StudentID",
                 table: "Request",
                 column: "StudentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Response_RequestID",
+                table: "Response",
+                column: "RequestID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Response_Type",
+                table: "Response",
+                column: "Type");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedule_SectionNumber",
@@ -552,6 +591,9 @@ namespace COCAS.Migrations
                 name: "HoD");
 
             migrationBuilder.DropTable(
+                name: "Redirect");
+
+            migrationBuilder.DropTable(
                 name: "Response");
 
             migrationBuilder.DropTable(
@@ -570,9 +612,6 @@ namespace COCAS.Migrations
                 name: "Request");
 
             migrationBuilder.DropTable(
-                name: "UserType");
-
-            migrationBuilder.DropTable(
                 name: "Time");
 
             migrationBuilder.DropTable(
@@ -585,7 +624,7 @@ namespace COCAS.Migrations
                 name: "Student");
 
             migrationBuilder.DropTable(
-                name: "FormType");
+                name: "UserType");
 
             migrationBuilder.DropTable(
                 name: "Course");

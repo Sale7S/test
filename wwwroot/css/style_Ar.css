@@ -224,3 +224,7 @@ select.type {
 .hidden {
     display: none;
 }
+
+.show {
+    display: normal;
+}

@@ -1,0 +1,17 @@
+﻿@model List<COCAS.Models.RedirectViewModel>
+
+@{
+    ViewData["title"] = "صفحة العميد";
+}
+<div class="text-center">
+    @ViewData["noRedirects"]
+    @foreach (var item in Model)
+    {
+        <form asp-route-current_time="@item.Time" method="post">
+            <div class="form-group" style="padding-top: 10px;">
+                <label>@item.Requests[0].StudentID</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input class="btn btn-default" type="submit" value="@item.Requests[0].FormTitle" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+        </form>
+    }
+</div>

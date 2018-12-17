@@ -29,6 +29,8 @@ namespace COCAS.Controllers
                     return RedirectToAction(nameof(Staff), new { id = UsernameSession });
                 else if (IsHoD())
                     return RedirectToAction(nameof(HoD), new { id = UsernameSession });
+                else if (IsDean())
+                    return RedirectToAction(nameof(Dean), new { id = UsernameSession });
             }
 
             return View();
@@ -153,15 +155,15 @@ namespace COCAS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Student([Bind("FormTitle")] StudentViewModel studentView, string id)
+        public IActionResult Student([Bind("FormTitle")] StudentViewModel studentVM, string id)
         {
             if (!IsAuthenticated(id))
                 return RedirectToAction(nameof(Login_Ar));
 
             if (ModelState.IsValid)
-                return RedirectToAction("Fill", "Requests", new { id, formTitle = studentView.FormTitle });
+                return RedirectToAction("Fill", "Requests", new { id, formTitle = studentVM.FormTitle });
 
-            return View(studentView);
+            return View(studentVM);
         }
 
         public IActionResult Staff(string id)
@@ -175,21 +177,21 @@ namespace COCAS.Controllers
             var requests = _context.Request
                 .Include(r => r.Student)
                 .Where(r => !_context.Response.Any(res => res.RequestID == r.ID))
+                .Where(r => !_context.Redirect.Any(red => red.RequestID == r.ID && _context.Response.Any(res => res.Type != UserTypeSession)))
                 .GroupBy(
                 r => r.CurrentTime,
                 r => r,
                 (key, value) => new { time = key, Requests = value.ToList() });
-
             var requestsView = new List<RequestViewModel>();
 
             foreach (var req in requests)
             {
-                var requestView = new RequestViewModel
+                var requestVM = new RequestViewModel
                 {
                     CurrentTime = req.time,
                     Requests = req.Requests
                 };
-                requestsView.Add(requestView);
+                requestsView.Add(requestVM);
             }
             if (requestsView.Count == 0)
                 ViewData["noRequests"] = "لا يوجد طلبات جديدة.";
@@ -211,15 +213,35 @@ namespace COCAS.Controllers
             if (!IsAuthenticated(id))
                 return RedirectToAction(nameof(Login_Ar));
 
-            //var responses = _context.Response
-                //.Where(res => res.Type == "HoD");
+            var redirects = await _context.Redirect
+                .Include(red => red.Request)
+                    .ThenInclude(r => r.Student)
+                .Where(red => red.Type == UserTypeSession && !_context.Response.Any(res => res.RequestID == red.RequestID && res.Type == UserTypeSession))
+                .GroupBy(
+                red => red.Request.CurrentTime,
+                red => red.Request,
+                (key, value) => new { Time = key, Requests = value.ToList() })
+                .ToListAsync();
+            var redirctsVM = new List<RedirectViewModel>();
 
-            return View();
+            foreach (var red in redirects)
+            {
+                var redirctVM = new RedirectViewModel
+                {
+                    Time = red.Time,
+                    Requests = red.Requests
+                };
+                redirctsVM.Add(redirctVM);
+            }
+
+            if (redirects.Count == 0)
+                ViewData["noRedirects"] = "لا يوجد طلبات جديدة.";
+            return View(redirctsVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult HoD(string a, string id)
+        public IActionResult HoD(string id, int current_time)
         {
             if (id == null)
                 return NotFound();
@@ -227,7 +249,51 @@ namespace COCAS.Controllers
             if (!IsAuthenticated(id))
                 return RedirectToAction(nameof(Login_Ar));
 
-            return View();
+            return RedirectToAction("FillHoD", "Responses", new { id, current_time });
+        }
+
+        public async Task<IActionResult> Dean(string id)
+        {
+            if (!IsAuthenticated(id))
+                return RedirectToAction(nameof(Login_Ar));
+
+            var redirects = await _context.Redirect
+                .Include(red => red.Request)
+                    .ThenInclude(r => r.Student)
+                .Where(red => red.Type == UserTypeSession && !_context.Response.Any(res => res.RequestID == red.RequestID && res.Type == UserTypeSession))
+                .GroupBy(
+                red => red.Request.CurrentTime,
+                red => red.Request,
+                (key, value) => new { Time = key, Requests = value.ToList() })
+                .ToListAsync();
+            var redirctsVM = new List<RedirectViewModel>();
+
+            foreach (var red in redirects)
+            {
+                var redirctVM = new RedirectViewModel
+                {
+                    Time = red.Time,
+                    Requests = red.Requests
+                };
+                redirctsVM.Add(redirctVM);
+            }
+
+            if (redirects.Count == 0)
+                ViewData["noRedirects"] = "لا يوجد طلبات جديدة.";
+            return View(redirctsVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Dean(string id, int current_time)
+        {
+            if (id == null)
+                return NotFound();
+
+            if (!IsAuthenticated(id))
+                return RedirectToAction(nameof(Login_Ar));
+
+            return RedirectToAction("FillDean", "Responses", new { id, current_time });
         }
     }
 }
