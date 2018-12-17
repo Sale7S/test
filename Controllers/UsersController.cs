@@ -176,8 +176,8 @@ namespace COCAS.Controllers
             
             var requests = _context.Request
                 .Include(r => r.Student)
-                .Where(r => !_context.Response.Any(res => res.RequestID == r.ID))
-                .Where(r => !_context.Redirect.Any(red => red.RequestID == r.ID && _context.Response.Any(res => res.Type != UserTypeSession)))
+                .Where(r => !_context.Response.Any(res => res.RequestID == r.ID && res.Type == UserTypeSession))
+                .Where(r => !_context.Redirect.Any(red => red.RequestID == r.ID && !_context.Response.Any(res => res.RequestID == red.RequestID && res.Type != UserTypeSession)))
                 .GroupBy(
                 r => r.CurrentTime,
                 r => r,

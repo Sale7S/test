@@ -34,7 +34,7 @@ namespace COCAS.Controllers
                     .ThenInclude(r => r.Course)
                 .ToListAsync();
             var studentResponses = await _context.Response
-                .Where(res => res.Request.StudentID == id)
+                .Where(res => res.Request.StudentID == id && res.Type == "Staff")
                 .ToListAsync();
             var studentNonRespondedRequests = new List<Request>();
 
