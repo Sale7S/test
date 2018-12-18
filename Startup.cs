@@ -69,9 +69,7 @@ namespace COCAS
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
             app.UseSession();
-
             app.UseAuthentication();
 
             app.UseMvc(routes =>
@@ -80,6 +78,7 @@ namespace COCAS
                     name: "default",
                     template: "{controller=Users}/{action=Login_Ar}/{id?}/{formTitle?}");
             });
+            app.UseCookiePolicy();
         }
     }
 }

@@ -6,8 +6,8 @@ namespace COCAS.Models
 {
     public class HoD
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        [Key]
+        public string Username { get; set; }
 
         [Required]
         [Display(Name = "Full Name")]
@@ -17,8 +17,10 @@ namespace COCAS.Models
         [Display(Name = "Department Code")]
         public string DepartmentCode { get; set; }
 
-
         [ForeignKey("DepartmentCode")]
         public Department Department {get; set;}
+
+        [ForeignKey("Username")]
+        public User User { get; set; }
     }
 }

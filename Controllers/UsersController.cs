@@ -51,7 +51,9 @@ namespace COCAS.Controllers
                 else
                 {
                     if (db_user.IsFirstLogin == true)
-                        return RedirectToAction(nameof(Password_change_Ar), new { user.Username });
+                    {
+                        return RedirectToAction(nameof(Password_change_Ar), new { id = db_user.Username });
+                    }
                     else
                     {
                         HttpContext.Session.SetString("Username", db_user.Username);
@@ -81,17 +83,17 @@ namespace COCAS.Controllers
             return RedirectToAction(nameof(Login_Ar));
         }
         
-        public IActionResult Password_change_Ar(string username)
+        public async Task<IActionResult> Password_change_Ar(string id)
         {
-            if (username == null)
-                return NotFound();
+            var user = await _context.User
+                       .FirstOrDefaultAsync(u => u.Username == id);
 
-            if (IsLoggedIn())
+            if (IsLoggedIn() || !user.IsFirstLogin)
                 return RedirectToAction(nameof(Login_Ar));
 
             var change = new PasswordChangeViewModel
             {
-                Username = username
+                Username = id
             };
 
             return View(change);
@@ -99,21 +101,20 @@ namespace COCAS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Password_change_Ar([Bind("Username, NewPassword, ConfirmNewPassword")] PasswordChangeViewModel change, string unused)
+        public async Task<IActionResult> Password_change_Ar([Bind("Username, Password, NewPassword, ConfirmNewPassword")] PasswordChangeViewModel change, string unused)
         {
-            if (change == null)
-                return NotFound();
-
             if (IsLoggedIn())
                 return RedirectToAction(nameof(Login_Ar));
 
             if (ModelState.IsValid)
             {
                 var user = await _context.User
-                         .FirstOrDefaultAsync(u => u.Username == change.Username);
+                    .FirstOrDefaultAsync(u => u.Username == change.Username);
 
                 if (user == null)
                     ViewData["validation"] = "اسم المستخدم غير صحيح.";
+                else if (change.Password != user.Password)
+                    ViewData["validation"] = "كلمة المرور غير صحيحة.";
                 else if (change.NewPassword != change.ConfirmNewPassword)
                     ViewData["validation"] = "كلمتا المرور غير متطابقتين.";
                 else
@@ -131,10 +132,7 @@ namespace COCAS.Controllers
 
         public async Task<IActionResult> Student(string id)
         {
-            if (id == null)
-                return NotFound();
-
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsStudent())
                 return RedirectToAction(nameof(Login_Ar));
 
             var schedule = _context.Schedule
@@ -157,7 +155,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Student([Bind("FormTitle")] StudentViewModel studentVM, string id)
         {
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsStudent())
                 return RedirectToAction(nameof(Login_Ar));
 
             if (ModelState.IsValid)
@@ -168,12 +166,9 @@ namespace COCAS.Controllers
 
         public IActionResult Staff(string id)
         {
-            if (id == null)
-                return NotFound();
-
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsStaff())
                 return RedirectToAction(nameof(Login_Ar));
-            
+
             var requests = _context.Request
                 .Include(r => r.Student)
                 .Where(r => !_context.Response.Any(res => res.RequestID == r.ID && res.Type == UserTypeSession))
@@ -182,17 +177,41 @@ namespace COCAS.Controllers
                 r => r.CurrentTime,
                 r => r,
                 (key, value) => new { time = key, Requests = value.ToList() });
+
+            var redirectsResponded = _context.Response
+                .Include(r => r.Request)
+                    .ThenInclude(r => r.Student)
+                .Include(r => r.UserType)
+                .Where(res => _context.Redirect.Any(red => red.RequestID == res.RequestID && res.Type != UserTypeSession));
+            
             var requestsView = new List<RequestViewModel>();
 
-            foreach (var req in requests)
+            foreach (var request in requests)
             {
+                bool? status = null;
+                string type = null;
+                string reason = null;
+                foreach (var red in redirectsResponded)
+                {
+                    if (request.Requests.Any(r => r.ID == red.RequestID))
+                    {
+                        status = red.Status;
+                        type = red.UserType.TypeAr;
+                        reason = red.Reason;
+                    }
+                }
+
                 var requestVM = new RequestViewModel
                 {
-                    CurrentTime = req.time,
-                    Requests = req.Requests
+                    CurrentTime = request.time,
+                    Requests = request.Requests,
+                    Status = status,
+                    Type = type,
+                    Reason = reason
                 };
                 requestsView.Add(requestVM);
             }
+
             if (requestsView.Count == 0)
                 ViewData["noRequests"] = "لا يوجد طلبات جديدة.";
             return View(requestsView);
@@ -202,7 +221,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Staff(string id, int current_time)
         {
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsStaff())
                 return RedirectToAction(nameof(Login_Ar));
 
             return RedirectToAction("Fill", "Responses", new { id, current_time });
@@ -210,13 +229,19 @@ namespace COCAS.Controllers
 
         public async Task<IActionResult> HoD(string id)
         {
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsHoD())
                 return RedirectToAction(nameof(Login_Ar));
+
+            var hod = await _context.HoD.FirstOrDefaultAsync(h => h.Username == id);
 
             var redirects = await _context.Redirect
                 .Include(red => red.Request)
                     .ThenInclude(r => r.Student)
-                .Where(red => red.Type == UserTypeSession && !_context.Response.Any(res => res.RequestID == red.RequestID && res.Type == UserTypeSession))
+                .Include(red => red.Request)
+                    .ThenInclude(r => r.Section)
+                .Where(red => red.Type == UserTypeSession &&
+                    !_context.Response.Any(res => res.RequestID == red.RequestID && res.Type == UserTypeSession) &&
+                    red.Request.Student.DepartmentCode == hod.DepartmentCode)
                 .GroupBy(
                 red => red.Request.CurrentTime,
                 red => red.Request,
@@ -243,10 +268,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult HoD(string id, int current_time)
         {
-            if (id == null)
-                return NotFound();
-
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsHoD())
                 return RedirectToAction(nameof(Login_Ar));
 
             return RedirectToAction("FillHoD", "Responses", new { id, current_time });
@@ -254,7 +276,7 @@ namespace COCAS.Controllers
 
         public async Task<IActionResult> Dean(string id)
         {
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsDean())
                 return RedirectToAction(nameof(Login_Ar));
 
             var redirects = await _context.Redirect
@@ -287,10 +309,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Dean(string id, int current_time)
         {
-            if (id == null)
-                return NotFound();
-
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsDean())
                 return RedirectToAction(nameof(Login_Ar));
 
             return RedirectToAction("FillDean", "Responses", new { id, current_time });

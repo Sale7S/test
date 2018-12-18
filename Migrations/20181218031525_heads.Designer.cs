@@ -4,14 +4,16 @@ using COCAS.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace COCAS.Migrations
 {
     [DbContext(typeof(COCASContext))]
-    partial class COCASContextModelSnapshot : ModelSnapshot
+    [Migration("20181218031525_heads")]
+    partial class heads
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

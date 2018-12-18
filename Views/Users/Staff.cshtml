@@ -1,22 +1,49 @@
 ﻿@model IEnumerable<COCAS.Models.RequestViewModel>
 
-@{ 
+@{
     ViewData["title"] = "صفحة شؤون الطلاب";
 }
-<div class="text-center">
+<div style="padding-right: 10px; padding-top: 30px;">
     @ViewData["noRequests"]
     @foreach (var item in Model)
     {
         <form asp-route-current_time="@item.CurrentTime" method="post">
             <div class="form-group" style="padding-top: 10px;">
-                <label>@Html.DisplayFor(model => item.Requests[0].Student.FullName)</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label>@Html.DisplayFor(model => item.Requests[0].StudentID)</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label>عدد المواد: &nbsp;@Html.DisplayFor(model => item.Requests.Count)</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input class="btn btn-default" type="submit" value="@item.Requests[0].FormTitle" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <label>عدد المواد: &nbsp;@Html.DisplayFor(model => item.Requests.Count)</label>
+
+                @if (item.Type != null)
+                {
+                    @Html.Raw("<label>معاد توجيهها ل: &nbsp;");
+                    @item.Type
+                    @Html.Raw("</label>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;");
+
+                    @Html.Raw("<label>الحالة: &nbsp;");
+                    if (item.Status == true)
+                    { @Html.Raw("مقبول");
+                }
+                else if (item.Status == false)
+                { @Html.Raw("مرفوض");
+            }
+            else
+            { @Html.Raw("قيد الانتظار");
+        }
+            @Html.Raw("</label>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;");
+
+            @Html.Raw("<label>السبب: &nbsp;");
+            if (item.Reason == null)
+            { @Html.Raw("لا يوجد");
+        }
+        else
+        { @item.Reason }
+            @Html.Raw("</label>");
+        }
             </div>
         </form>
     }<br /><br /><br /><br />
     <div class="btn btn-default">
+        <a asp-controller="Responses" asp-action="Staff">الطلبات المعاد توجيهها</a><br /><br /><br /><br /><br />
         <a asp-controller="Files" asp-action="Upload">تحديث البيانات</a><br />
-        <a asp-controller="Responses" asp-action="Staff">المعاد توجيهها</a><br />
     </div>
 </div>

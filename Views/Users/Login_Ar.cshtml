@@ -8,7 +8,6 @@
 </script>
 <div class="container-login login">
     <form id="loginForm" method="post">
-        <div dir="ltr" asp-validation-summary="All"></div>
         <span class="ERR_MSG">@ViewData["validate_username"]</span>
         <span class="ERR_MSG">@ViewData["validate_password"]</span>
         <div class="avatar">
@@ -21,7 +20,6 @@
                     <span class="labelTxt">اسم المستخدم</span>
                 </label>
                 <input asp-for="Username" class="non-empty refresh" size="15">
-                <span asp-validation-for="Username"></span>
             </div>
             <div class="input">
                 <label asp-for="Password">
@@ -29,7 +27,6 @@
                     <span class="labelTxt">كلمة المرور</span>
                 </label>
                 <input asp-for="Password" class="non-empty refresh" size="15">
-                <span asp-validation-for="Password"></span>
             </div>
             <script src="~/js/Login/form.js"></script>
 

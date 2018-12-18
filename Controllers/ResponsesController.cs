@@ -22,10 +22,7 @@ namespace COCAS.Controllers
         //This method list all students' requests and responses.
         public async Task<IActionResult> Student(string id)
         {
-            if (id == null)
-                return NotFound();
-
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsStudent())
                 return RedirectToAction("Login_Ar", "Users");
 
             var studentRequests = await _context.Request
@@ -55,10 +52,7 @@ namespace COCAS.Controllers
         // This method shows the Staff the form he asked to response to.
         public async Task<IActionResult> Fill(string id, int current_time)
         {
-            if (id == null)
-                return NotFound();
-
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsStaff())
                 return RedirectToAction("Login_Ar", "Users");
 
             var studentsRequestsPerForm = await _context.Request
@@ -87,7 +81,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Fill([Bind("[i].Request.ID, [i].Status, [i].Reason, [i].IsRedirected, [i].UserType")] List<CreateResponseViewModel> responsesVM, string id, string unused)
         {
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsStaff())
                 return RedirectToAction("Login_Ar", "Users");
 
             foreach (var responseVM in responsesVM)
@@ -156,10 +150,7 @@ namespace COCAS.Controllers
         // This method shows the HoD the form he asked to responses to.
         public async Task<IActionResult> FillHoD(string id, int current_time)
         {
-            if (id == null)
-                return NotFound();
-
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsHoD())
                 return RedirectToAction("Login_Ar", "Users");
 
             var studentsRequestsPerForm = await _context.Redirect
@@ -188,7 +179,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> FillHoD([Bind("[i].Request.ID, [i].Status, [i].Reason")] List<CreateRedirectViewModel> redirectsVM, string id, string unused)
         {
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsHoD())
                 return RedirectToAction("Login_Ar", "Users");
 
             foreach (var redirectVM in redirectsVM)
@@ -210,10 +201,7 @@ namespace COCAS.Controllers
         // This method shows the Dean the form he asked to responses to.
         public async Task<IActionResult> FillDean(string id, int current_time)
         {
-            if (id == null)
-                return NotFound();
-
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsDean())
                 return RedirectToAction("Login_Ar", "Users");
 
             var studentsRequestsPerForm = await _context.Redirect
@@ -242,7 +230,7 @@ namespace COCAS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> FillDean([Bind("[i].Request.ID, [i].Status, [i].Reason")] List<CreateRedirectViewModel> redirectsVM, string id, string unused)
         {
-            if (!IsAuthenticated(id))
+            if (!IsAuthenticated(id) || !IsDean())
                 return RedirectToAction("Login_Ar", "Users");
 
             foreach (var redirectVM in redirectsVM)
